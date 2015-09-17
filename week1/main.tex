@@ -24,8 +24,8 @@
 \XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
 
 % \def\footnotesize{\fontsize{16}{24}\selectfont}
-\def\small{\fontsize{12}{16}\selectfont}
-\def\normalsize{\fontsize{14}{21}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
 \def\large{\fontsize{16}{24}\selectfont}
 \def\Large{\fontsize{20}{30}\selectfont}
 \def\LARGE{\fontsize{24}{36}\selectfont}
@@ -229,39 +229,54 @@ $f(x) = t^2$ 和 g(x) 會以差不多的速度趨近無限大，於是我們便�
 \section{排序}
 
 \subsection*{Introduction}
-甚麼是排序
+排序，是個聽似簡單，卻頗有學問的一件事。光是排序就可以左右眾多演算法的複雜度。
+想要排序，我們可以有以下幾種作法。
 
 \subsection{ $O(N^2)$ 算法}
 \begin{description}
 \item[ 1.]Selection sort\\
-123
+每次花O(N)的時間從未排序的序列裡找出最小的，然後O(1)放到排好的序列後端。
+總複雜度$O(N^2)$，非常直觀。
 \item[ 2.]Insertion sort\\
-456
+跟選擇排序相反，這次從未排序的序列O(1)拿出東西然後插入排好的序列中正確的位置，
+因為不一定要看完整條序列才能決定插入位置，所以有機會比選擇排序快，雖然複雜度還是$O(N^2)$，
+但是在N很小的時候是很快的排序法。
 \item[ 3.]Bubble sort\\
-789
+每次讓一個最小的值浮出來(或是最大的值沉下去)，作法是不停檢查相鄰的元素，
+如果前面比後面大就交換兩者，所以稱為氣泡排序。每次可以保證一個值被換到正確位置，複雜度$O(N^2)$。
+通常是各類C++入門書上寫的排序法。
 \end{description} 
 
 \subsection{ $O(N lg N)$ 算法}
+很顯然的$O(N^2)$不能滿足我們，於是我們可以利用一些性質來優化我們的算法。
 \begin{description}
-\item[ 1.]Merge sort
-123
-\item[ 2.]Quick sort
-456
-\item[ 3.]Heap sort
-789
+\item[ 1.]Merge sort\\
+運用分治的概念，先分開排序，在合併兩個各別排好序的序列。
+運用Selection sort的概念合併，但是因為兩個序列都已經排好序了，我們只需要檢查兩個值就能找到最小值，
+於是合併複雜度是O(N)，總共需要合併lgN次，於是複雜度為O(N lg N)。
+\item[ 2.]Quick sort\\
+選擇一個值當軸然後把小於這個值和大於這個值的數字分兩堆，遞迴求解。
+運氣好的話複雜度是O(N lg N)，但是如果一直選到最大或最小值當軸，複雜度會退化到$O(N^2)$。
+可以進行一些優化，比如切到少於某個數量就用Insertion sort等等，STL::sort()就是優化過的快速排序(Intro sort)。
+\item[ 3.]Heap sort\\
+利用Heap這種資料結構進行排序。Heap可以O(lgN)插入元素，O(1)找最小值，所以把序列全部放進去再拿出來可以有O(N lg N)的複雜度。之後會再提到Heap。
 \end{description} 
 
 \subsection{ $O(N + C)$ 算法}
+以上的排序演算法都是基於比較兩者的大小來進行排序，但是如果比較的成本很高，
+又或是數值差距不大，我們可以使用一些更有效率的方法。
 \begin{description}
 \item[ 1.]Counting sort
-123
+假設我們要排序的序列值是介於1~100的整數，我們何不開一個1~100的陣列，直接紀錄每個數字出現的次數。
+這樣需要O(N)確認次數，O(C)(C是所有數值中最大的差距)確認每個數字的數量並還原成一個序列。
 \item[ 2.]Radix sort
-456
-\item[ 3.]Heap sort
-789
+將數字(或是字串)補空白補至一樣長，然後根據每一個位數作比較，在十進位下位數只會有11種可能(包含空白)，所以很適合使用Counting sort，這樣複雜度是$O((log_B C) * (N + B))$，B是進位法，C是數字範圍。
 \end{description} 
 
 \subsection{穩定與不穩定排序}
+排序的時候，如果兩個一樣大的數字，在排序後前後關係反過來了(原本排在前面變成在後面)，
+這樣我們就稱她為不穩定排序，反之則稱為穩定排序。有時候必須利用穩定排序的性質來解題。
+
 
 \subsection{Exercises!!}
 \begin{description}
@@ -273,21 +288,30 @@ $f(x) = t^2$ 和 g(x) 會以差不多的速度趨近無限大，於是我們便�
 \section{資料結構}
 
 \subsection*{Introduction}
-為甚麼要資料結構
+在接觸各式各樣的演算法後，單純的陣列已經不敷使用，除了大小不固定之外、可能還要做插入的操作等等。
+資料結構泛指一些支援某些操作的容器，選擇適合的容器將可以大大提升效能和降低編程的難度。
 
 \subsection{array}
+基本的陣列，大小不一定要固定，但是一定可以O(1)取值，O(n)插入(刪除)。
 
 \subsection{link list}
+跟陣列相反，可以O(1)插入(刪除)，但是要O(n)取值。
 
 \subsection{stack}
+LIFO的資料結構，可以O(1)push，O(1)pop，東西放進stack會「疊」在那裡，pop時會把最上方的值pop出去。
 
 \subsection{queue}
+FIFO的資料結構，可以O(1)push，O(1)pop，東西放進queue會「排隊」，pop時最早進入的會最先被pop出去。
 
 \subsection{deque}
+念作"deck"，又可以稱作double-ended queue，可以從兩端塞東西進去和拿東西出來。
 
 \subsection{Tree}
+由一群節點組成，每個節點都有一個父節點(根節點除外)，其中二元樹(最多只有兩個子節點的樹)更是被廣泛使用。
+樹可以延伸出大量複雜的資料結構，這裡就先略過不提。
 
 \subsection{Heap}
+一種樹狀資料結構，符合值越大會在越上方的性質。至少可以插入和查找，也許會有合併和刪除的功能。
 
 \subsection{Exercises!!}
 \begin{description}
