@@ -1,0 +1,198 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{titlesec}
+
+% My addon
+\renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
+\usepackage{fontspec}   %加這個就可以設定字體
+\usepackage{xeCJK}       %讓中英文字體分開設置
+\setmainfont{Times New Roman}
+\setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
+\XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
+
+% \def\footnotesize{\fontsize{16}{24}\selectfont}
+% \def\small{\fontsize{16}{24}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
+\def\large{\fontsize{16}{24}\selectfont}
+\def\Large{\fontsize{20}{30}\selectfont}
+\def\LARGE{\fontsize{24}{36}\selectfont}
+\def\huge{\fontsize{32}{48}\selectfont}
+\def\Huge{\fontsize{36}{54}\selectfont}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+% \chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\hmwkClass} % Top right header
+% \lfoot{\lastxmark} % Bottom left footer
+\cfoot{\thepage} % Bottom center footer
+% \rfoot{Page\ \ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+% \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%	CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+\lstloadlanguages{C++} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+\lstset{language=C++, % Use Perl in this example
+        frame=single, % Single frame around code
+        basicstyle=\small\ttfamily, % Use small true type font
+        keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
+        keywordstyle=[2]\color{Purple}, % Perl function arguments purple
+        keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
+        identifierstyle=, % Nothing special about identifiers                                         
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
+        stringstyle=\color{Purple}, % Strings are purple
+        showstringspaces=false, % Don't put marks in string spaces
+        tabsize=5, % 5 spaces per tab
+        %
+        % Put standard Perl functions not included in the default language here
+        morekeywords={rand},
+        %
+        % Put Perl function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        % Put user defined functions here
+        morekeywords=[3]{test},
+       	%
+        morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
+        numbers=left, % Line numbers on left
+        firstnumber=1, % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue}, % Line numbers are blue and small
+        stepnumber=5 % Line numbers go in steps of 5
+}
+
+% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
+\newcommand{\perlscript}[2]{
+\begin{itemize}
+\item[]\lstinputlisting[caption=#2,label=#1]{#1.pl}
+\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{培訓-1} % Assignment title
+\newcommand{\hmwkDueDate}{2015年9月18日（金曜日）} % Due date
+\newcommand{\hmwkClass}{演算法概論、排序、資料結構、雜湊} % Course/class
+\newcommand{\hmwkClassTime}{TTD} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{TT} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{samsam2310} % Your name
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\hmwkClass}
+\author{\hmwkAuthorName}
+\date{\hmwkDueDate}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\LARGE~\\[4ex]
+\centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
+\normalsize
+
+\section{資訊娘攻略計畫}
+\subsection{主線任務}
+\begin{tabular}[t]{lllp{7cm}}
+\hline
+時間 & 任務名稱 & 場地 & 任務目標 \\
+\hline
+10/6 & 建中資訊能力競賽複賽 & 建國中學 & 前 11 名進入校隊，培訓開放旁聽\\
+11 月 & 北市資訊能力競賽 & 師大分部 & 由校隊參加，前十名進全國賽\\
+12 月 & 全國資訊能力競賽 & 不明 & 前十名進入 TOI 一階\\
+3 月 & 建中資訊校隊補選 & 建國中學 & 遞補已進 TOI 一階的名額\\
+3 月 & TOI 入營考 & 師大分部 & 前 20 名進入 TOI 一階\\
+4 月 & TOI 一階 & 師大分部 & 2 次模考前 10~12 名進 TOI 二階\\
+5 月 & TOI 二階 & 師大分部 & 4 人成為 IOI 國手\\
+5 月 & APIO & 師大分部 & 由 TOI 二階的選手參加\\
+7 月 & IOI & Россия Казань & 為國爭光!!\\
+\hline
+\end{tabular}
+\subsection{支線任務}
+\begin{tabular}[t]{lllp{9cm}}
+\hline
+時間 & 任務名稱 & 場地 & 任務目標 \\
+\hline
+11 月 & 北市軟體競賽 & 大安高工 & 第 1 階段筆試第 2 階段上機\\
+11 12 月 & NPSC & 台灣大學 & 同校三人組隊報名，分初賽和決賽，每校至多三隊進決賽，第二名有棋盤，其他人有U盤!!\\
+\hline
+\end{tabular}
+\subsection{OJ娘}
+\begin{tabular}[t]{llp{11cm}}
+\hline
+名字 & 住址 & 個性\\
+\hline
+TIOJ & tioj.infor.org &
+全名是TIOJ INFOR ONLINE JUDGE，雖然看似年輕，但是其實已經活了幾十年了，有很多經典題目，
+也有很多爛題目。\\
+HOJ & hoj.twbbs.org/judge/ &
+師大附中的Online Judge，有很多競賽題，想要使用必須先請管理員開通帳號，她自稱「題目質量高」。\\
+Uva & uva.onlinejudge.org &
+可以稱之為史上第一個Online Judge，歷史悠久，題目可能永遠都寫不完，要練習英文和反覆練習相關算法很適合找她。\\
+POI & main.edu.pl &
+波蘭的OI網站，在Poi在網路上橫行之前就存在了，不過現在google完全搜不到，
+有很多很有趣的題目，很適合在準備比賽前去刷題。\\
+POJ & poj.org &
+北京大學的OJ，因為本人不太喜歡對岸的題目風格所以沒有深入，題目多，可以偶爾去刷題。\\
+\hline
+\end{tabular}
+\subsection{OJ娘}
+\begin{tabular}[t]{llp{11cm}}
+\hline
+名字 & 住址 & 個性\\
+\hline
+TIOJ & tioj.infor.org &
+全名是TIOJ INFOR ONLINE JUDGE，雖然看似年輕，但是其實已經活了幾十年了，有很多經典題目，
+也有很多爛題目。\\
+HOJ & hoj.twbbs.org/judge/ &
+師大附中的Online Judge，有很多競賽題，想要使用必須先請管理員開通帳號，她自稱「題目質量高」。\\
+Uva & uva.onlinejudge.org &
+可以稱之為史上第一個Online Judge，歷史悠久，題目可能永遠都寫不完，要練習英文和反覆練習相關算法很適合找她。\\
+POI & main.edu.pl &
+波蘭的OI網站，在Poi在網路上橫行之前就存在了，不過現在google完全搜不到，
+有很多很有趣的題目，很適合在準備比賽前去刷題。\\
+POJ & poj.org &
+北京大學的OJ，因為本人不太喜歡對岸的題目風格所以沒有深入，題目多，可以偶爾去刷題。\\
+\hline
+\end{tabular}
+\section{SSSSSSSS2}
+12
+\section{SSSSSSSS3}
+12
+
+
+
+
+\end{document}
