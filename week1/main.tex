@@ -321,26 +321,40 @@ FIFO的資料結構，可以O(1)push，O(1)pop，東西放進queue會「排隊�
 
 
 \section{雜湊}
-雜湊的意義
+雜湊、Hash、哈希，是將一群值對應到另外一群值的一種方法。
+當我們想要從N個元素中尋找某個值的時候，我雖然可以用O(lg N)的時間查找，
+但是我們其實並不需要他的位置等等資訊，我們只要確認這個值「存在」與否。
+理論上Hash可以做到O(1)，比如老師點名只需要直接喊你的座號，而不需要從一號開始確認。
+使用規則對應稱為Hash Function，使用表格對應稱為哈希表。
 
 \subsection{Hash Function}
+最簡單的Hash Function就是不要Hash，直接把f(x) = x，優點是絕對不會碰撞，
+缺點是當數字(或是其他形別資料)範圍太大時很不實用。
+另外可以透過取餘數(Mod)來建立Hash，又或是其他的對應方法，但是這時我們就必須處理碰撞問題了。
 
 \subsection{碰撞}
+因為Hash後的數字範圍較小，所以一定有兩個以上不同的值映射到同一個Hash值，我們稱為碰撞。
+處理碰撞有幾種作法。
 \begin{description}
 \item[ 1.]RP\\
-123
+你的人品很好，所以他不會碰撞。
 \item[ 2.]Chaining\\
-123
-\item[ 3.]Linear\\
-123
-\item[ 4.]Probing\\
-123
-\item[ 5.]Doubly Hashing\\
-123
-\item[ 6.]Perfect Hashing\\
-123
+有碰撞就接在同一格後面，但是當碰撞很嚴重時效率會接近沒有Hash。
+\item[ 3.]Linear Probing\\
+建構新的Hash Function $h(x, i) = (h(x) + i)\ \%\ L$，i從0遞增，直到沒有碰撞為止。當然也可以改成二次多項式$h(x, i) = (h(x) + c_1 i^2 + c_2 i)\ \%\ L$。
+\item[ 4.]Doubly Hashing\\
+把Hash Function換成這樣：$ h(x, i) = (h_1 (x) + i × h_2 (x))\ mod\ Lׇ$，也就是多Hash幾遍減少碰撞的意思。
+
+\item[ 5.]Perfect Hashing\\
+完美雜湊。簡單來說就是先用可能會碰撞的Hash Function先把元素盡量分散，
+之後再針對每個碰撞的點做絕對不會碰撞的Hash，因為第一層已經讓數量平均分散，所以第二層不會太大。
 \end{description}
 
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]題目
+123
+\end{description}
 
 \section{STL}
 
