@@ -18,7 +18,7 @@
 \renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
 \usepackage{fontspec}   %加這個就可以設定字體
 \usepackage{xeCJK}       %讓中英文字體分開設置
-\setmainfont{Times New Roman}
+\setmainfont{Arial}
 \setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
 \XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
 \XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
@@ -357,43 +357,57 @@ FIFO的資料結構，可以O(1)push，O(1)pop，東西放進queue會「排隊�
 \end{description}
 
 \section{STL}
+Standard Template Library，簡稱STL，是一個C++的標準模板庫，提供很多方便的功能可以使用，
+讓我們可以節省很多編寫資料結構的時間，專注在解題上。
+他們大多支援類似的method，只要熟悉STL的幾個資料結構，其他的資料結構使用上來說差異不大，
+只是使用前一定要清楚了解該操作的複雜度和性質(是否有排序等等)，否則可能會拖垮效率或甚至出錯。以下筆者大致將常用STL分成了幾項：
 
-\subsection{型態}
+\subsection{資料型態}
 \subsubsection{string}
+C++的string是個很方便的資料型態，讓原本被當成指標的字串可以當成變數傳遞，
+在編寫函數或是操作字串時更方便，但是在效率上就稍微比C string(字元陣列)慢了。
 
 \subsection{容器}
+基本的容器結構，其他STL結構常常使用這些結構當作容器。
 \subsubsection{vector}
-
+向量，或是稱做動態陣列，可以自由增加長度。從後端插入均攤O(1)。很常用的容器。
 \subsubsection{list}
-
+實做link-list的容器，可以O(1)插入，串接，O(N)查找。
 \subsubsection{deque}
+較為複雜的容器，雖然功能上是deque(雙頭queue)，但是卻可以O(1)隨機查找、O(1)從前後插入刪除。
 
 \subsection{資料結構}
 \subsubsection{stack}
-
+實作stack，預設容器是std::vector，因為std::stack使用一般陣列或是vector取代更為方便，所以不常使用。
 \subsubsection{queue}
-
+實作queue，預設容器是std::list，因為實作比較麻煩所以比std::stack較常被使用
 \subsubsection{priority\_queue}
-
+實作Heap，預設容器是std::vector，可以O(1)查詢最大值，O(lg N)插入。
 \subsubsection{set/map}
-
+實作紅黑樹，set是集合，map是一組key-value對應，基本上可以O(lg N)插入O(lg N)查找
 \subsubsection{unordered set/map}
+實作Hash，操作跟set/map一樣，但是 unordered set/map 使用Hash，所以可以做到均攤O(1)的效率，
+如果不需要 set/map 的排序性質建議使用 unordered set/map 。不過因為 unordered set/map 的常數很大，
+所以在競賽中遇到的情況下通常不會和 set/map 差太多。
 
 \subsection{STL Algorithm}
+STL模板庫也提供了很多方便的函數，這裡列舉一些常見的函數。
 \subsubsection{sort()/stable\_sort()}
-
+排序一個可以遍歷的容器，基本上一般陣列或是vector都可以，如果要穩定排序可以使用stable\_sort()。
 \subsubsection{lower\_bound()、upper\_bound() binary\_search()}
-
+分別對一個序列搜尋小於目標的最後一個值、等於目標的最後一個值，和確認目標是否存在該序列中。
 \subsubsection{fill()}
-
-\subsubsection{reverse()}
-
-\subsubsection{mismatch()}
-
-\subsubsection{next\_permutation()}
-
+將一個序列以某個值填滿，可以用來取代for迴圈設定初始值。
+和<cstring>中的memset不同的是，memset只能將記憶體規0或是其他有限的操作，
+但是fill可以填入任何值甚至是物件。
 \subsubsection{random\_shuffle()}
-
+隨機排列一個序列，時間複雜度O(N)。
+\subsubsection{reverse()}
+反轉一個序列。
+\subsubsection{mismatch()}
+找出兩個序列中第一組不同的值。
+\subsubsection{next\_permutation()}
+找出下一個排列，\{1,2,3\} -> \{2,1,3\} -> \{2,3,1\}...，當需要每舉排列進行運算時可以使用。
 
 
 \end{document}
