@@ -1,0 +1,497 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{caption}
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{titlesec}
+
+% My addon
+\renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
+\usepackage{fontspec}   %加這個就可以設定字體
+\usepackage{xeCJK}       %讓中英文字體分開設置
+\setmainfont{Arial}
+\setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
+\XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
+
+% \def\footnotesize{\fontsize{16}{24}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
+\def\large{\fontsize{16}{24}\selectfont}
+\def\Large{\fontsize{20}{30}\selectfont}
+\def\LARGE{\fontsize{24}{36}\selectfont}
+\def\huge{\fontsize{32}{48}\selectfont}
+\def\Huge{\fontsize{36}{54}\selectfont}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+% \chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\hmwkClass} % Top right header
+% \lfoot{\lastxmark} % Bottom left footer
+\cfoot{\thepage} % Bottom center footer
+% \rfoot{Page\ \ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+% \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%	CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+ 
+% \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+% \lstloadlanguages{C++} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+% \lstset{language=Matlab, % Use Perl in this example
+%         frame=tB, % Single frame around code
+%         basicstyle=\normalsize, % Use small true type font
+%         % keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
+%         % keywordstyle=[2]\color{Purple}, % Perl function arguments purple
+%         % keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
+%         keywordstyle=\color{black}\bfseries\em,
+%         keywords={input, output, return, datatype, function, in, if, else, foreach, while, begin, end}, %add the keywords you want, or load a language as Rubens explains in his comment above.
+%         identifierstyle=, % Nothing special about identifiers                                         
+%         commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
+%         stringstyle=\color{Purple}, % Strings are purple
+%         showstringspaces=false, % Don't put marks in string spaces
+%         tabsize=4, % 5 spaces per tab
+%         %
+%         % Put standard Perl functions not included in the default language here
+%         morekeywords={rand},
+%         %
+%         % Put Perl function parameters here
+%         morekeywords=[2]{on, off, interp},
+%         %
+%         % Put user defined functions here
+%         morekeywords=[3]{test},
+%        	%
+%         morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
+%         numbers=left, % Line numbers on left
+%         firstnumber=1, % Line numbers start with line 1
+%         numberstyle=\normalsize, % Line numbers are blue and small
+%         stepnumber=1 % Line numbers go in steps of 5
+% }
+
+% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
+% \newcommand{\algorithmscript}[2]{
+% \begin{itemize}
+% \item[]\lstinputlisting[caption=#2,label=#1]{#1.NB}
+% \end{itemize}
+% }
+
+\newcounter{nalg} % defines algorithm counter for chapter-level
+\DeclareCaptionLabelFormat{algocaption}{\normalsize\bf Algorithm \thenalg} % defines a new caption label as Algorithm x.y
+
+\lstnewenvironment{algorithm}[1][] %defines the algorithm listing environment
+{   
+    \refstepcounter{nalg} %increments algorithm number
+    \captionsetup{labelformat=algocaption,labelsep=colon} %defines the caption setup for: it ises label format as the declared caption label above and makes label and caption text to be separated by a ':'
+    \lstset{ %this is the stype
+        frame=tB,
+        numbers=left, 
+        numberstyle=\normalsize,
+        basicstyle=\normalsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end, } %add the keywords you want, or load a language as Rubens explains in his comment above.
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
+    }
+}
+{}
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{培訓-2} % Assignment title
+\newcommand{\hmwkDueDate}{2015年9月23日（火曜日）} % Due date
+\newcommand{\hmwkClass}{併查集と狀態空間搜索} % Course/class
+\newcommand{\hmwkClassTime}{TTD} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{TT} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{FruitTea} % Your name
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\hmwkClass}
+\author{\hmwkAuthorName}
+\date{\hmwkDueDate}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\LARGE~\\[4ex]
+\centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
+\normalsize
+
+\section{Disjoint Sets}
+\subsection*{Introduction}
+Disjoint Sets，又稱互斥集，代表一群集合兩兩交集皆為空集合的狀況，常常用來處理「分類」問題。
+因為功能實用、實作簡單，在資訊競賽中很常被使用。\\
+實作Disjoint Sets的資料結構我們可以稱她為併查樹(Union-find Tree)或是併查森林(很多棵樹嚴格上來說要叫做森林)。
+基本上我們會以一顆併查樹代表一個集合。\\
+一個基本的併查樹我們必須實作兩種操作，Find 和 Union。
+
+\subsection{Find 查詢}
+我們有一個陣列 P[x] 代表 x 的 parent 是誰，如果 x 是併查樹的樹根(root)，我們就把 x 的 parent 當作是自己，
+也就是說，一開始所有的 P[x] = x 。(一開始大家都屬於各自不同的集合)\\
+如果我們想要知道 x 在哪個集合中(x 的 root 是誰)，我們只要遞迴 P[x] 就可以得到答案了。
+
+\begin{algorithm}[caption={Find}, label={alg1}]
+function Find(x)
+    if x ≠ p[x] then
+        return Find(p[x])
+    else
+        return x
+    end if
+end function
+\end{algorithm}
+
+可是這樣每次找一個點，最慘的狀況下可能會花 O(N) 的時間，所以我們引入一個稱為"Path Compression"的概念，
+速度可以快非常多。\\
+Path Compression 其實就是在遞迴的過程中，讓所有路徑上的點「直接」連到root。代碼如下。
+
+\begin{algorithm}[caption={Find \& Path Compression}, label={alg1}]
+function Find(x)
+    if x ≠ p[x] then
+        p[x] ← Find(p[x])
+        return Find(p[x])
+    else
+        return x
+    end if
+end function
+\end{algorithm}
+
+
+
+% \subsection{主線任務}
+% \begin{tabular}[t]{lllp{7cm}}
+% \hline
+% 時間 & 任務名稱 & 場地 & 任務目標 \\
+% \hline
+% 10/6 & 建中資訊能力競賽複賽 & 建國中學 & 前 11 名進入校隊，培訓開放旁聽\\
+% 11 月 & 北市資訊能力競賽 & 師大分部 & 由校隊參加，前十名進全國賽\\
+% 12 月 & 全國資訊能力競賽 & 不明 & 前十名進入 TOI 一階\\
+% 3 月 & 建中資訊校隊補選 & 建國中學 & 遞補已進 TOI 一階的名額\\
+% 3 月 & TOI 入營考 & 師大分部 & 前 20 名進入 TOI 一階\\
+% 4 月 & TOI 一階 & 師大分部 & 2 次模考前 10~12 名進 TOI 二階\\
+% 5 月 & TOI 二階 & 師大分部 & 4 人成為 IOI 國手\\
+% 5 月 & APIO & 師大分部 & 由 TOI 二階的選手參加\\
+% 7 月 & IOI & Россия Казань & 為國爭光!!\\
+% \hline
+% \end{tabular}
+
+% \subsection{支線任務}
+% \begin{tabular}[t]{lllp{9cm}}
+% \hline
+% 時間 & 任務名稱 & 場地 & 任務目標 \\
+% \hline
+% 11 月 & 北市軟體競賽 & 大安高工 & 第 1 階段筆試第 2 階段上機\\
+% 11 12 月 & NPSC & 台灣大學 & 同校三人組隊報名，分初賽和決賽，每校至多三隊進決賽，第二名有棋盤，其他人有U盤!!\\
+% \hline
+% \end{tabular}
+
+% \subsection{OJ娘}
+% \begin{tabular}[t]{llp{11cm}}
+% \hline
+% 名字 & 住址 & 個性\\
+% \hline
+% TIOJ & tioj.infor.org &
+% 全名是TIOJ INFOR ONLINE JUDGE，雖然看似年輕，但是其實已經活了幾十年了，有很多經典題目，
+% 也有很多爛題目。\\
+% HOJ & hoj.twbbs.org/judge/ &
+% 師大附中的Online Judge，有很多競賽題，想要使用必須先請管理員開通帳號，她自稱「題目質量高」。\\
+% Uva & uva.onlinejudge.org &
+% 可以稱之為史上第一個Online Judge，歷史悠久，題目可能永遠都寫不完，要練習英文和反覆練習相關算法很適合找她。\\
+% POI & main.edu.pl &
+% 波蘭的資奧網站，在Poi在網路上橫行之前就存在了，不過現在google完全搜不到，
+% 有很多很有趣的題目，很適合在準備比賽前去刷題。\\
+% POJ & poj.org &
+% 北京大學的OJ，因為本人不太喜歡對岸的題目風格所以沒有深入，題目多，可以偶爾去刷題。\\
+% \hline
+% \end{tabular}
+
+% \subsection{競賽網站}
+% \begin{tabular}[t]{llp{10cm}}
+% \hline
+% 名稱 & 網址 & 內容\\
+% \hline
+% 程式之力 & codeforces.com &
+% 通常一段時間會有比賽，可以爬世界排名！\\
+% 美國資奧 & usaco.org &
+% 約11月會有比賽，分成金銀銅三組，聽說金組難度不高?!\\
+% 程式廚師 & codechef.com &
+% 一個月有一到兩場比賽，題目有簡單有難，也有無解的神祕題。\\
+% 頂尖程式設計師 & topcoder.com &
+% 比較複雜，除了演算法也有應用的題目。\\
+% \hline
+% \end{tabular}
+
+% \subsection{網路資源}
+% \begin{tabular}[t]{llp{7cm}}
+% \hline
+% 名稱 & 網址 & 內容\\
+% \hline
+% 演算法筆記 & www.csie.ntnu.edu.tw/~u91029/ &
+% 對大部分競賽會用到的演算法都有詳細的講解，是非常好的參考資料！\\
+% c++ reference & www.cplusplus.com/reference &
+% 這裡可以查到有關於C/C++的相關資料，包含各種方法、複雜度等等，想要打好競賽一定要來逛逛。\\
+% \hline
+% \end{tabular}
+
+% \subsection{如何攻略資訊娘？}
+% 先不討論你是周強或眼皮這種存在就是外掛的情況，解資訊題其實是一件很吃人品的事情，根據大量的真人真事我們知道就算是編譯器也會有RE的時候。
+% 但是從正確的角度下手還是可以增加一點存活機率。\\
+% 如果我們遇到一隻資訊娘的時候，你一眼就看穿了她的真面目，那你就可以開心的開始coding了(最好在開始前稍微嚴謹的證明過自己的想法)。
+% 如果失敗，那就必須分析題目的包裝，想辦法找出最原始的題目內容，之後就可以用基本的演算法去分析拆解，
+% 最麻煩的情況就是必須實作複雜的資料結構，然後你就成功的攻略一隻資訊娘了。\\
+% 大膽假設，小心求證，一開始不要顧慮枝微末節的記憶體和效率問題，先求穩穩地寫出正確的結果再來優化，出事的機會會小很多。當然過度的繞遠路也是沒有必要的，有「某人」常常會因為上述的原因所以就亂開陣列，結果反而讓程式碼更亂更複雜。\\
+% 適當的挑題則是可以幫助你很有效的拿到競賽的分數，畢竟競賽時間有限，如果可以輕鬆拿的分數一定要先拿。
+% 平常練習時少複製貼上自己寫過的code，重寫一遍增加印象，這些都可以幫助你更容易在資訊競賽中拿到好成績。\\
+% 不過當然前提是，你有足夠人品的情況下。\\
+% 還有，相信自己(的人品?!)。\\
+
+
+% \section{演算法簡介}
+
+% \subsection{Introduction}
+% 演算法是一個解決問題的具體步驟，可以由一連串的邏輯或是函數組成。
+% 演算法可以幫助我們用更有效率的方法解決生活中遇到的各種問題。
+% 同一件事可能可以有多種方案，這時我們可以分析每種方案的優劣來決定要使用哪一種。
+
+% \subsection{複雜度估算和 Big O 函數}
+% 這裡的複雜度是一個估算值代表演算法執行時消耗的資源，
+% 依照資源不同可以大致分成時間複雜度、空間複雜度、編程複雜度等等。
+% 複雜度估的越準，越可以掌握演算法執行的效率。
+% 通常我們確定做法的正確性後，便應該估計此作法的複雜度，才能更有效率的解決問題。
+% 我們常常可以用一個時間的多項式函數表示一個演算法執行需要的時間(或空間)，這時我們要引進一個函數，Big O。
+% Big O 的定義如下：\[f(N) = O(g(N)),\ if\ \ \exists N_0,c > 0,\ \ \forall N > N_0,\ |f(N)|\ ≤\ c|g(N)|\]
+% 意思就是說存在一個常數 c ，在N夠大的時候，讓 f(x) 不大於 g(x) 的 c 倍，
+% 也就是說，我們可以用 f(x) 來估算 g(x) 的複雜度。\\
+% 對於一個多項式如$g(x) = x^2 + x + 1$，在 x 很大的時候，其實影響函數值的主要項是平方項，所以我們可以認為，
+% $f(x) = t^2$ 和 g(x) 會以差不多的速度趨近無限大，於是我們便可以用f(x)來當作複雜度的估計值。
+% 其實，函數在x很大的時候，會影響函數值的主要項都是最高次方的那項，常見的複雜度有：
+% \[O(1) < O(lg N) < O(N) < O(N lg N) < O(N^k) < O(k^N ) < O(N!) < O(N^N)\]
+
+
+% \section{排序}
+
+% \subsection*{Introduction}
+% 排序，是個聽似簡單，卻頗有學問的一件事。光是排序就可以左右眾多演算法的複雜度。
+% 想要將一個序列依照大小順序排好，我們可以有以下幾種作法。
+
+% \subsection{ $O(N^2)$ 算法}
+% \begin{description}
+% \item[ 1.]Selection sort\\
+% 每次花O(N)的時間從未排序的序列裡找出最小的，然後O(1)放到排好的序列後端。
+% 總複雜度$O(N^2)$，非常直觀。
+% \item[ 2.]Insertion sort\\
+% 跟選擇排序相反，這次從未排序的序列O(1)拿出東西然後插入排好的序列中正確的位置，
+% 因為不一定要看完整條序列才能決定插入位置，所以有機會比選擇排序快，雖然複雜度還是$O(N^2)$，
+% 但是在N很小的時候是很快的排序法。
+% \item[ 3.]Bubble sort\\
+% 每次讓一個最小的值浮出來(或是最大的值沉下去)，作法是不停檢查相鄰的元素，
+% 如果前面比後面大就交換兩者，所以稱為氣泡排序。每次可以保證一個值被換到正確位置，複雜度$O(N^2)$。
+% 通常是各類C++入門書上寫的排序法。
+% \end{description} 
+
+% \subsection{ $O(N lg N)$ 算法}
+% 很顯然的$O(N^2)$不能滿足我們，於是我們可以利用一些性質來優化我們的算法。
+% \begin{description}
+% \item[ 1.]Merge sort\\
+% 運用分治的概念，先分開排序，在合併兩個各別排好序的序列。
+% 運用Selection sort的概念合併，但是因為兩個序列都已經排好序了，我們只需要檢查兩個值就能找到最小值，
+% 於是合併複雜度是O(N)，總共需要合併lgN次，於是複雜度為O(N lg N)。
+% \item[ 2.]Quick sort\\
+% 選擇一個值當軸然後把小於這個值和大於這個值的數字分兩堆，遞迴求解。
+% 運氣好的話複雜度是O(N lg N)，但是如果一直選到最大或最小值當軸，複雜度會退化到$O(N^2)$。
+% 可以進行一些優化，比如切到少於某個數量就用Insertion sort等等，STL::sort()就是優化過的快速排序(Intro sort)。
+% \item[ 3.]Heap sort\\
+% 利用Heap這種資料結構進行排序。Heap可以O(lgN)插入元素，O(1)找最小值，所以把序列全部放進去再拿出來可以有O(N lg N)的複雜度。之後會再提到Heap。
+% \end{description} 
+
+% \subsection{ $O(N + C)$ 算法}
+% 以上的排序演算法都是基於比較兩者的大小來進行排序，但是如果比較的成本很高，
+% 又或是數值差距不大，我們可以使用一些更有效率的方法。
+% \begin{description}
+% \item[ 1.]Counting sort
+% 假設我們要排序的序列值是介於1~100的整數，我們何不開一個1~100的陣列，直接紀錄每個數字出現的次數。
+% 這樣需要O(N)確認次數，O(C)(C是所有數值中最大的差距)確認每個數字的數量並還原成一個序列。
+% \item[ 2.]Radix sort
+% 將數字(或是字串)補空白補至一樣長，然後根據每一個位數作比較，在十進位下位數只會有11種可能(包含空白)，所以很適合使用Counting sort，這樣複雜度是$O((log_B C) * (N + B))$，B是進位法，C是數字範圍。
+% \end{description} 
+
+% \subsection{穩定與不穩定排序}
+% 排序的時候，如果兩個一樣大的數字，在排序後，有可能發生順序關係反轉(原本排在前面變成在後面)的情況，
+% 我們就稱這樣的排序法為不穩定排序，反之則稱為穩定排序。有時候必須利用穩定排序的性質來解題。
+
+
+% \subsection{Exercises!!}
+% \begin{description}
+% \item[ 1.]<TIOJ 1080 逆序數對>\\
+% 給你 N(≤ $10^5$) 個數字的數列a，問你有幾組(i, j) 符合 i < j 且 $a_i > a_jׇ$。
+% \item[ 2.]<TIOJ 1364 第K大數>\\
+% 給你長度為N的數列跟K，O(N)找出第K大的數。
+% \item[ 3.]<Bubble sort 交換次數>\\
+% 計算長度為 N (≤ $10^5$)的序列進行Bubble sort需要交換的次數。
+% \item[ 4.]<TIOJ 1410 Comiket>\\
+% 有 N (≤ $10^5$)隻Loli，第i隻Loli分別在$s_i$的時間來你家玩並在$t_i$的時間離開，請問你最幸福的時候，即最多同時有幾隻Loli同時在你家。
+
+% \end{description} 
+
+
+% \section{資料結構}
+
+% \subsection*{Introduction}
+% 在接觸各式各樣的演算法後，單純的陣列已經不敷使用，除了大小不固定之外、可能還要做插入的操作等等。
+% 資料結構泛指一些支援某些操作的容器，選擇適合的容器將可以大大提升效能和降低編程的難度。
+
+% \subsection{array}
+% 基本的陣列，大小不一定要固定，但是一定可以O(1)取值，O(n)插入(刪除)。
+
+% \subsection{link list}
+% 跟陣列相反，可以O(1)插入(刪除)，但是要O(n)取值。
+
+% \subsection{stack}
+% LIFO的資料結構，可以O(1)push，O(1)pop，東西放進stack會「疊」在那裡，pop時會把最上方的值pop出去。
+
+% \subsection{queue}
+% FIFO的資料結構，可以O(1)push，O(1)pop，東西放進queue會「排隊」，pop時最早進入的會最先被pop出去。
+
+% \subsection{deque}
+% 念作"deck"，又可以稱作double-ended queue，可以從兩端O(1)塞東西進去和拿東西出來。
+
+% \subsection{Tree}
+% 由一群節點組成，每個節點都有一個父節點(根節點除外)，其中二元樹(最多只有兩個子節點的樹)更是被廣泛使用。
+% 樹可以延伸出大量複雜的資料結構，這裡就先略過不提。
+
+% \subsection{Heap}
+% 一種樹狀資料結構，符合值越大會在越上方的性質。至少可以插入和查找，也許會有合併和刪除的功能。
+
+% \subsection{Exercises!!}
+% \begin{description}
+% \item[ 1.]<Uva 514 Rails>
+% \item[ 2.]<TIOJ 1176 Cows>
+% \item[ 3.]<TIOJ 1063 最大矩形>
+% \item[ 4.]<TIOJ 1489 核心字串>
+% \item[ 5.]<HOJ 2 我要寫毛啊>
+% \item[ 6.]<TIOJ 1637 我愛台灣>
+% \item[ 7.]<TIOJ 1834 炉心融解>
+% \end{description}
+
+
+% \section{雜湊}
+% 雜湊、Hash、哈希，是將一群值對應到另外一群值的一種方法。
+% 當我們想要從N個元素中尋找某個值的時候，我雖然可以用O(lg N)的時間查找(離散化)，
+% 但是我們其實並不需要他的位置等等資訊，我們只要確認這個值「存在」與否。
+% 理論上Hash可以做到O(1)，比如老師點名只需要直接喊你的座號，而不需要從一號開始確認。
+% 使用規則對應稱為Hash Function，使用表格對應稱為哈希表。
+
+% \subsection{Hash Function}
+% 最簡單的Hash Function就是不要Hash，直接把f(x) = x，優點是絕對不會碰撞，
+% 缺點是當數字(或是其他形別資料)範圍太大時很不實用。
+% 另外可以透過取餘數(Mod)來建立Hash，又或是其他的對應方法，但是這時我們就必須處理碰撞問題了。
+
+% \subsection{碰撞}
+% 因為Hash後的數字範圍較小，所以一定有兩個以上不同的值映射到同一個Hash值，我們稱為碰撞。
+% 處理碰撞有幾種作法。
+% \begin{description}
+% \item[ 1.]RP\\
+% 你的人品很好，所以他不會碰撞。
+% \item[ 2.]Chaining\\
+% 有碰撞就接在同一格後面，但是當碰撞很嚴重時效率會接近沒有Hash。
+% \item[ 3.]Linear Probing\\
+% 建構新的Hash Function $h(x, i) = (h(x) + i)\ \%\ L$，i從0遞增，直到沒有碰撞為止。當然也可以改成二次多項式$h(x, i) = (h(x) + c_1 i^2 + c_2 i)\ \%\ L$。
+% \item[ 4.]Doubly Hashing\\
+% 把Hash Function換成這樣：$ h(x, i) = (h_1 (x) + i × h_2 (x))\ mod\ Lׇ$，也就是多Hash幾遍減少碰撞的意思。
+
+% \item[ 5.]Perfect Hashing\\
+% 完美雜湊。簡單來說就是先用可能會碰撞的Hash Function先把元素盡量分散，
+% 之後再針對每個碰撞的點做絕對不會碰撞的Hash，因為第一層已經讓數量平均分散，所以第二層不會太大。
+% \end{description}
+
+% \subsection{Exercises!!}
+% \begin{description}
+% \item[ 1.]<TIOJ 1160 動態眾數問題>
+% \item[ 2.]<TIOJ 1302 撿鞋運動>
+% \item[ 3.]<TIOJ 1849 超文字妹妹控協定>
+% \end{description}
+
+% \section{STL}
+% Standard Template Library，簡稱STL，是一個C++的標準模板庫，提供很多方便的功能可以使用，
+% 讓我們可以節省很多編寫資料結構的時間，專注在解題上。
+% 他們大多支援類似的method，只要熟悉STL的幾個資料結構，其他的資料結構使用上來說差異不大，
+% 只是使用前一定要清楚了解該操作的複雜度和性質(是否有排序等等)，否則可能會拖垮效率或甚至出錯。以下筆者大致將常用STL分成了幾項：
+
+% \subsection{資料型態}
+% \subsubsection{string}
+% C++的string是個很方便的資料型態，讓原本被當成指標的字串可以當成變數傳遞，
+% 在編寫函數或是操作字串時更方便，但是在效率上就稍微比C string(字元陣列)慢了。
+
+% \subsection{容器}
+% 基本的容器結構，其他STL結構常常使用這些結構當作容器。
+% \subsubsection{vector}
+% 向量，或是稱做動態陣列，可以自由增加長度。從後端插入均攤O(1)。很常用的容器。
+% \subsubsection{list}
+% 實做link-list的容器，可以O(1)插入，串接，O(N)查找。
+% \subsubsection{deque}
+% 較為複雜的容器，雖然功能上是deque(雙頭queue)，但是卻可以O(1)隨機查找、O(1)從前後插入刪除。
+
+% \subsection{資料結構}
+% \subsubsection{stack}
+% 實作stack，預設容器是std::vector，因為std::stack使用一般陣列或是vector取代更為方便，所以不常使用。
+% \subsubsection{queue}
+% 實作queue，預設容器是std::list，因為實作比較麻煩所以比std::stack較常被使用
+% \subsubsection{priority\_queue}
+% 實作Heap，預設容器是std::vector，可以O(1)查詢最大值，O(lg N)插入。
+% \subsubsection{set/map}
+% 實作紅黑樹，set是集合，map是一組key-value對應，基本上可以O(lg N)插入O(lg N)查找
+% \subsubsection{unordered set/map}
+% 實作Hash，操作跟set/map一樣，但是 unordered set/map 使用Hash，所以可以做到均攤O(1)的效率，
+% 如果不需要 set/map 的排序性質建議使用 unordered set/map 。不過因為 unordered set/map 的常數很大，
+% 所以在競賽中遇到的情況下通常不會和 set/map 差太多。
+
+% \subsection{STL Algorithm}
+% STL模板庫也提供了很多方便的函數，這裡列舉一些常見的函數。
+% \subsubsection{sort()/stable\_sort()}
+% 排序一個可以遍歷的容器，基本上一般陣列或是vector都可以，如果要穩定排序可以使用stable\_sort()。
+% \subsubsection{lower\_bound()、upper\_bound() binary\_search()}
+% 分別對一個序列搜尋小於目標的最後一個值、等於目標的最後一個值，和確認目標是否存在該序列中。
+% \subsubsection{fill()}
+% 將一個序列以某個值填滿，可以用來取代for迴圈設定初始值。
+% 和<cstring>中的memset不同的是，memset只能將記憶體規0或是其他有限的操作，
+% 但是fill可以填入任何值甚至是物件。
+% \subsubsection{random\_shuffle()}
+% 隨機排列一個序列，時間複雜度O(N)。
+% \subsubsection{reverse()}
+% 反轉一個序列。
+% \subsubsection{mismatch()}
+% 找出兩個序列中第一組不同的值。
+% \subsubsection{next\_permutation()}
+% 找出下一個排列，\{1,2,3\} -> \{2,1,3\} -> \{2,3,1\}...，當需要每舉排列進行運算時可以使用。
+
+
+% \end{document}
