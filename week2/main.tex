@@ -185,7 +185,23 @@ function Find(x)
 end function
 \end{algorithm}
 
+\subsection{Union 合併}
+想要合併兩個集合，也就是合併兩顆併查樹，只要把A樹的樹根接到B樹的樹根就可以了。
 
+\begin{algorithm}[caption={Union}, label={alg1}]
+function Union(x, y)
+    p[Find(x)] ← Find(y)
+end function
+\end{algorithm}
+
+合併上也有一個優化的方法叫做"Union By Rank"，也就是把小樹合併到大樹上，這樣需要更動的點會比較少。\\
+
+\subsection{總結}
+併查樹可以讓我們在處理分類和合併的問題時可以很輕鬆的完成。如果我們同時使用"Union By Rank"和"Path Compression"，
+併查樹的複雜度是 O(N × α(N))，其中 α(N) 是阿克曼函數的反函數。不過就算不用"Union By Rank"，
+複雜度也只是退化到 O(N × lg N)，在競賽領域中的操作下，遇到的 α(N) 和 lg N 都不會太大，
+所以基本上我們可以把併查樹的複雜度當作 O(N) 來使用。
+("Union By Rank"對於併查樹來說會麻煩很多又不會快很多，所以平常大可以不用實作)
 
 % \subsection{主線任務}
 % \begin{tabular}[t]{lllp{7cm}}
@@ -494,4 +510,4 @@ end function
 % 找出下一個排列，\{1,2,3\} -> \{2,1,3\} -> \{2,3,1\}...，當需要每舉排列進行運算時可以使用。
 
 
-% \end{document}
+\end{document}
