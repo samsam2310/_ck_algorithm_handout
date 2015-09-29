@@ -59,45 +59,6 @@
 %----------------------------------------------------------------------------------------
 %	CODE INCLUSION CONFIGURATION
 %----------------------------------------------------------------------------------------
- 
-% \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
-% \lstloadlanguages{C++} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
-% \lstset{language=Matlab, % Use Perl in this example
-%         frame=tB, % Single frame around code
-%         basicstyle=\normalsize, % Use small true type font
-%         % keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
-%         % keywordstyle=[2]\color{Purple}, % Perl function arguments purple
-%         % keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
-%         keywordstyle=\color{black}\bfseries\em,
-%         keywords={input, output, return, datatype, function, in, if, else, foreach, while, begin, end}, %add the keywords you want, or load a language as Rubens explains in his comment above.
-%         identifierstyle=, % Nothing special about identifiers                                         
-%         commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
-%         stringstyle=\color{Purple}, % Strings are purple
-%         showstringspaces=false, % Don't put marks in string spaces
-%         tabsize=4, % 5 spaces per tab
-%         %
-%         % Put standard Perl functions not included in the default language here
-%         morekeywords={rand},
-%         %
-%         % Put Perl function parameters here
-%         morekeywords=[2]{on, off, interp},
-%         %
-%         % Put user defined functions here
-%         morekeywords=[3]{test},
-%        	%
-%         morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
-%         numbers=left, % Line numbers on left
-%         firstnumber=1, % Line numbers start with line 1
-%         numberstyle=\normalsize, % Line numbers are blue and small
-%         stepnumber=1 % Line numbers go in steps of 5
-% }
-
-% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
-% \newcommand{\algorithmscript}[2]{
-% \begin{itemize}
-% \item[]\lstinputlisting[caption=#2,label=#1]{#1.NB}
-% \end{itemize}
-% }
 
 \newcounter{nalg} % defines algorithm counter for chapter-level
 \DeclareCaptionLabelFormat{algocaption}{\normalsize\bf Algorithm \thenalg} % defines a new caption label as Algorithm x.y
@@ -112,7 +73,7 @@
         numberstyle=\normalsize,
         basicstyle=\normalsize, 
         keywordstyle=\color{black}\bfseries\em,
-        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end, } %add the keywords you want, or load a language as Rubens explains in his comment above.
+        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end,} %add the keywords you want, or load a language as Rubens explains in his comment above.
         numbers=left,
         xleftmargin=.04\textwidth,
         #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
@@ -126,7 +87,7 @@
 
 \newcommand{\hmwkTitle}{培訓-3} % Assignment title
 \newcommand{\hmwkDueDate}{2015年9月30日（火曜日）} % Due date
-\newcommand{\hmwkClass}{二分搜尋と問題解決技巧} % Course/class
+\newcommand{\hmwkClass}{二分搜尋と演算法設計の方法} % Course/class
 \newcommand{\hmwkClassTime}{TTD} % Class/lecture time
 \newcommand{\hmwkClassInstructor}{TT} % Teacher/lecturer
 \newcommand{\hmwkAuthorName}{joe59491} % Your name
@@ -147,363 +108,217 @@
 \centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
 \normalsize
 
-Binary Search
-    介紹
-        Q:現在給你一個已經照大小順序排好的數列，怎樣快速的找到x這個數字的位置(或是告知x不存在)?
-        A:
-            1.看一下數列正中間的值，如果剛好等於x代表你找到了
-            2.不是的話，想一下x會在左半邊還是右半邊，然後把沒有x的那半邊丟掉
-            3.如果數列還有東西，回到步驟1，不然代表找不到
-        時間複雜度: O(ClgN) C是檢查的時間複雜度，N是數列的大小
-        常用的地方:
-            1.找東西
-            2.求符合某條件的最小(最大)值
-            3.奇怪的互動題
-    虛擬碼
-        int l=0,r=n-1
-        while(l<=r)
-            int mid=(l+r)/2
-            if(l<mid)
-                r=mid-1
-            else
-                l=mid+1
-        ans=l
-    相關STL:
-        1.upper_bound
-            template <class ForwardIterator, class T, class Compare>
-            ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last,
-                const T& val[, Compare comp]);
-        2.lower_bound
-            template <class ForwardIterator, class T, class Compare>
-            ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last,
-                const T& val[, Compare comp]);
-        3.binary_search
-            不常用(僅回傳bool)
-        4.equal_range
-            相當於回傳make_pair(lower_bound...,upper_bound...);
-    例題:
-        1.第K大連續和(TIOJ 1208)
-            一個總長度為項的數列S，其連續和共有n(n+1)/2個。請問，這n(n+1)/2個連續和之中，第k大的是多少？
-        2.洞穴Cave(TIOJ 1839)
-            你迷路了。你發現一個入口。入口被連續N個門阻隔。有N個開關分別連接到這N個不同的門。
-            門依序由0~N-1編號，最接近你的那扇門編號為0。開關編號也是0~N-1但你並不知道哪個開關連到哪扇門。
-            開關都位於洞穴的入口處。每個開關可以被設定成上或下。每個開關只有一個方向是正確的。若一個開關被設定在正確的方向，則其連接到的門便會打開，反之則否。每一個開關的正確方向可能不相同，現在你並不知道開關的正確方向。
-            你可以將開關設定成任何的組合，並且走入這個洞穴觀察第一個未開的門。這些門都是不透明的，當你發現第一個未開的門時，你無法看到任何後方的門。
-            你可以嘗試最多70,000種組合。你的任務是把所有的門都打開。
-Divide & Conquer 
-    介紹
-        大陸稱之為分治，有些奇怪的人稱之為Fun Jizz，是一種常見的算法設計方法。
-        步驟
-            1.切開 把問題切碎
-            2.處理 把碎片解決
-            3.合併 把碎片合併
-        時間複雜度
-            時間複雜度通常都是一個遞迴函式，推出一般項的方法有亂猜後用數學歸納法證明，劃出遞迴樹以及使用主定理(Master theorem)。有興趣可以自己去Google。
-        常用的地方:
-            許多的算法都有運用到分治的想法，例如前面所說的二分搜、merge sort、快速矩陣乘法、最近點對等等...
-            一般出現的時候，如果不是已經看過的類型，通常很難當場想出來。
-    例題
-        1.逆序數對(TIOJ 1080)
-            輸入一個數列，輸出數列中有多少數對是逆序的。
-        2.河內之塔-蘿莉塔(TIOJ 1355)
-            有三根柱子，第一根上有圈圈，每個大小都不一樣，且大的在下面，然後請輸出如何把所有的圈圈移到第三根柱子上，過程中不能讓小的圈圈在大的圈圈下面。
-        3.平面最近點對(TIOJ 1500)
-            給你平面上N個點，問最近的兩個點有多近。
-        4.樹分治(POJ 1741)
-            給你一棵樹，問樹上距離<=K的點對數量。
-        5.點連接遊戲(TIOJ 1631)
-            在正方形xy平面上給你N個紅點跟綠點(左上右上紅點，左下右下綠點)，保證三點不共線，請用不交叉的數個線段分別把紅點跟綠點連起來。
-Dynamic Programming
-    名詞解釋
-        最佳化問題(Optimization Problem)，是從諸多可行解中找出的最佳解(Optimal Solution)的問題。 
-        動態規劃(Dynamic Programming)，簡稱DP，是解決每種最佳化問題的典型策略，許多的最佳化問題都要由一連串的決策導出，而當我們面對這些決策時，會不斷的出現擁有相似型態的子問題。
-    介紹
-        What
-            DP使用將原問題分解成子問題的方式推導出源問題的解答。我們常常把原問題分解成數個較容易解決的子問題，如果子問題還是過難的話，就繼續分解成更多的子問題。而當不同子問題的最佳解可能來自相同的子子問題的時候，次技巧精妙之處就是把處理過的解答存起來，以免重複計算，因此適合以DP解決的問題通常都有子問題重疊(Overlapping Subproblems)的性質，也就是不同子問題最佳解可能會包含相同的子子問題。
-        When
-            但是也不是所有最佳化問題都能使用DP來解決，適合使用DP的最佳化問題也需要滿足幾個特性才能確保DP的正確性。
-                1.最佳子結構
-                    問題的最佳解中含有子問題 的最佳解，也就是說問題的最佳 解可以由子問題的最佳解推得。
-                2.無後效性
-                    若子問題決定的母問題最佳 解會影響到子問題的最佳解，則 有後效性。
-        How
-            使用DP解決問題時，我們通常會先辨認出問題的結構特徵，然後遞迴更新各個最佳解，如果有需要則會將計算過的子問題存起來，方便重複取用而不必重複計算，從而提高效率。 
-            一般實作時主要分為兩種風格
-                1.Bottom-Up
-                    從最小的子問題開始計算答案，逐漸算出更大子問題的答案，直到算出目標解為止。 
-                    優點:可以直接使用迴圈跑過整個表格計算出答案，且適當的設計迭代順序的話還可以壓縮記憶體使用量。 
-                    缺點:遇到狀態較多的題目表格會太大，可能會計算無用的子問題。
-                2.Top-Down
-                    從原問題開始遞迴計算子問題，將算過的子問題最佳解存起來，並逐步地算出答案 
-                    優點:不會計算到多於的子問題，且子問題數目很多時仍可使用。 
-                    缺點:表格大小會和子問題總數一樣大，呼叫函式遞迴也需要負擔額外的成本。
-    例題
-        1.工廠生產問題
-            一間工廠有兩條生產線，生產線上各有N個工作站，兩條生產線對應的工作站工作相同但是效率不同，你可以把一條生產線中的半成品轉到另外一條生產線上(需要成本)，做每件事情的成本可能都不相同，問生產一件產品所需的最小成本是多少?
-        2.最大正方形
-            給你一個只含0跟1且大小為N*N的正方形，問最大只由1組成的方形可以多大?
-        3.A Game (TIOJ 1029)
-            有一串由N個正整數所組成的數列，兩個玩者輪流拿走一個最左邊或最右邊的數，直到最後所有的數都取完之後，兩個玩者分別把自己所取到數加總，分數較高的人獲勝。問兩個玩家分別所能得到的最高分數是多少?
-        4.切木棒
-            你有一根長度N 的木棒，對於長度1,2...N的木棒，某商人願意畫a1,a2...N 的價格跟你購買，如果切木棒不花錢問你最多能賺多少錢?
-        5.01背包問題
-            你擁有一個載重V 的背包，和N個物品，每個物品都有各自的重量和價值，問你在不超重的前提下，最多可以裝多少價值的物品?
-        6.石油 (TIOJ 1816)
-            給你一個n*m的矩陣，請從中選出三個互不覆蓋的且大小為k*k的正方形，並最大化總和
-        7.兔子跳鈴鐺(TIOJ 1019)
-            給你N個鈴鐺的水平位置，你每次可以從x跳到x+1或x+2的鈴鐺上，問從第1個跳到第n個鈴鐺所需的最小水平移動距離
-        8.打地鼠(TIOJ 1014)
-            有編號1,2,⋯,n的地鼠動。玩家站在最左邊，與第一個地鼠洞相距1公尺，準備開始這個遊戲。編號為 i 的地鼠洞每Ti秒地鼠會出現一次。被打的地鼠不再出現，所有地鼠打完就結束遊戲，問結束遊戲所需的最少秒數。
-        9.Relay Race(codeforces 214E)
-            現在你有一個n*n的矩陣，你要選兩條(1,1)->(n,n)的捷徑，讓兩條路徑聯集上的數字總和最大
-        10.一切的開始(Step5 0004)
-            有N隻殭屍A1,A2,...AN排成一排，殭屍分兩種，你想要讓所有殭屍都變第一種，你可以改變一隻的屬性，或是改變A1~Ax的屬性，問你最少要改幾次。
-        11.數Misaka妹妹(Step5 0093)
-            你想要數數看排了多少御坂妹妹，但你卻發現自己每連續數到n個御坂妹妹眼花，如果眼前總共有m個人在排隊，那麼有幾種排列方式是不會算錯的呢？
-Greedy
-    介紹
-        What
-            Greedy使用一個很當純的想法尋找答案，就是每次只選擇當前看似最佳的選擇。換言之我們每次都選擇當前最佳解，並期望能達到全局最佳解。因此Greedy不一定能得到問題的最佳解，但是當他被證明可行時(否則他只能獲得近似解)，Greedy通常也會是這個問題的最佳策略，因為他放棄搜尋所有解答空間，效率也因此提高很多。
-        When
-            原則上要符合兩個特性才能使用Greedy
-                1.最佳子結構
-                    問題的最佳解中含有子問題 的最佳解，也就是說問題的最佳 解可以由子問題的最佳解推得。
-                2.貪婪選擇屬性
-                    每次決策時我們可以選擇當前看似最佳的選擇，並在繼續Greedy下去。也就是說每次決策的時候只考慮目前為止做過的選擇，不考慮未來可能要做的選擇或是子問題的解答。
-        How
-            觀察
-                看到題目後先想想他有沒有一些特性
-            假設
-                接者假設如果再做一個決策的時候，用怎麼樣的方法很有可能會朝向是最佳解的方向
-            證明
-                證明每次的決策"這樣做不會更差"(結果會在最佳解上)，然後增加coding信心
-    例題
-        1.賣場監視器
-            給你每個人進出賣場的時間，問賣場什麼時候人最多?
-        2.找零錢
-            大多數國家的貨幣面額都設計過，使得用貪婪策略都剛好會是硬幣數量最少的最佳湊法?
-        3.惱人的零錢(NPSC2005 pB)
-            咚咚想要買一個價格為C的物品，告訴你咚咚和老闆個別擁有的1,5,10,20,50硬幣的數量，請輸出找完錢後咚咚最少能剩下多少硬幣?
-        4.湊零錢(TOI2015 二模)
-            有一些面額為1,5,10,50,100,500,1000的錢幣，問你用這些硬幣最小湊不出來的錢是多少?
-        5.誰先早餐(NPSC2005 pA)
-            給你n個想要吃早餐的人和一個廚師。大家可以一起吃，但是廚師一次只能做一到菜。給定每人要吃多久，及他吃的那道菜要做多久，問至少需要多少時間所有人才能都吃完?
-        6.背包問題(Step5 0021)
-            有兩個背包的容量分別為N,M現在要將N+M個物品放進背包，每件物品都有它的重量，求字典序最小的放法使兩個背包分別的重量平均數加起來最小。
-        7.蘿莉切割問題(Step5 0031)
-            你要將一塊長L的木板切成N段，每段長度是Ai(A1+A2...+An=L)，而將一塊長X的木板切開需要X的花費，問花費最小的方法?
-        8.看動畫(HOJ 28)
-            你有一台有m個USB孔的電腦，還有編號1~N的隨身碟，現在你想要照一定的順序來看隨身碟裡的動畫，問最少的隨身碟插拔次數?
-        9.錢包的路(TIOJ 1636)
-            地上有一排的錢包(每個相距1步的距離)，你每走到一個錢包上面，就可以拿走裡面的錢。當你走一步路，地上錢包裡的錢就會恢復。問你走玩N步後，最多可以獲得多少錢?
-        10.骨牌遊戲,H遊戲秘笈(TIOJ 1432,1465)
-            給定一個長為N的數列，求使分成K段之後每段總和的最大值最小的分法。
 
-% \section{Disjoint Sets 互斥集}
-% \subsection*{Introduction}
-% Disjoint Sets，又稱互斥集，代表一群集合兩兩交集皆為空集合的狀況，常常用來處理「分類」問題。
-% 因為功能實用、實作簡單，在資訊競賽中很常被使用。\\
-% 實作Disjoint Sets的資料結構我們可以稱她為併查樹(Union-find Tree)或是併查森林(很多棵樹嚴格上來說要叫做森林)。
-% 基本上我們會以一顆併查樹代表一個集合。\\
-% 一個基本的併查樹我們必須實作兩種操作，Find 和 Union。
+\section{Binary Search 二分搜尋}
+\subsection*{Introduction}
+現在給你一個已經照大小順序排好的數列，怎樣快速的找到x這個數字的位置(或是告知x不存在)?
+\begin{description}
+\item[ Step 1.]看一下數列正中間的值，如果剛好等於x代表你找到了
+\item[ Step 2.]不是的話，想一下x會在左半邊還是右半邊，然後把沒有x的那半邊丟掉
+\item[ Step 3.]如果數列還有東西，回到步驟1，不然代表找不到
+\end{description}
 
-% \subsection{Find 查詢}
-% 我們有一個陣列 P[x] 代表 x 的 parent 是誰，如果 x 是併查樹的樹根(root)，我們就把 x 的 parent 當作是自己。
-% 初始狀態下所有的 P[x] = x 。(一開始大家都屬於各自不同的集合)\\
-% 如果我們想要知道 x 在哪個集合中(x 的 root 是誰)，我們只要遞迴 P[x] 就可以得到答案了。
+~\\時間複雜度為 O(C lgN)，C是檢查的時間複雜度，N是數列的大小。\\
+以下虛擬碼代表在一個排序過的陣列中尋找x的位置的方法。
 
-% \begin{algorithm}[caption={Find}, label={alg1}]
-% function Find(x)
-%     if x ≠ p[x] then
-%         return Find(p[x])
-%     else
-%         return x
-%     end if
-% end function
-% \end{algorithm}
-
-% 可是這樣每次找一個點，最慘的狀況下可能會花 O(N) 的時間，所以我們引入一個稱為"Path Compression"的概念，
-% 速度可以快非常多。\\
-% Path Compression 其實就是在遞迴的過程中，讓所有路徑上的點「直接」連到root。代碼如下。
-
-% \begin{algorithm}[caption={Find \& Path Compression}, label={alg1}]
-% function Find(x)
-%     if x ≠ p[x] then
-%         p[x] ← Find(p[x])
-%         return Find(p[x])
-%     else
-%         return x
-%     end if
-% end function
-% \end{algorithm}
-
-% \subsection{Union 合併}
-% 想要合併兩個集合，也就是合併兩顆併查樹，只要把A樹的樹根接到B樹的樹根就可以了。
-
-% \begin{algorithm}[caption={Union}, label={alg1}]
-% function Union(x, y)
-%     p[Find(x)] ← Find(y)
-% end function
-% \end{algorithm}
-
-% 合併上也有一個優化的方法叫做"Union By Rank"，也就是把小樹合併到大樹上，這樣需要更動的點會比較少。\\
-
-% \subsection{總結}
-% 併查樹可以讓我們在處理分類和合併的問題時很輕鬆的完成。如果我們同時使用"Union By Rank"和"Path Compression"，
-% 併查樹的複雜度是 O(N × α(N))，其中 α(N) 是阿克曼函數的反函數。不過就算不用"Union By Rank"，
-% 複雜度也只是退化到 O(N × lg N)，在競賽領域中，我們會遇到的併查樹的操作， α(N) 和 lg N 都不會太大，
-% 所以基本上我們可以把併查樹的複雜度當作 O(N) 來使用。至於"Union By Rank"對於併查樹來說會比較麻煩(需要多紀錄rank)又不會快很多，所以平常不太需要。
-
-% \subsection{Exercises!!}
-
-% \begin{description}
-% \item[ 1.]<TIOJ 1312 家族>\\
-% 給你很多組數字 a, b，代表 a 與 b 在同個家族。
-% 現在給你一個數字 k，求 k 所在的家族中編號最小的是誰?
-% \item[ 2.]<POJ 2492 雌蟲雄蟲>\\
-% 給你很多對關係 x, y，代表蟲 x 跟蟲 y 性別不一樣。
-% 請輸出這些條件是否有任何矛盾 (也就是有蟲為雌雄同體，ex:(x, y)、(y, z)、(z, x))。
-% \item[ 3.]<POJ 1182 食物鏈>\\
-% 總共有 A、B、C 三種天使，A 吃 B，B 吃 C，C 吃 A。
-% 依序給你很多組關係 d, x, y，若 d = 1 則代表天使 x 跟 y 是同類，d = 2 則代
-% 表天使 x 吃 y。
-% 若當前給的關係與之前的關係矛盾，代表此組關係是假的。
-% 求總共有多少組關係是假的？
-% \item[ 4.]<TIOJ 1833 陽炎眩亂>\\
-% 有一群蘿莉機器人，分成很多部隊，每個部隊都有一個女王。
-% 題目可能要求你合併兩個部隊或是查詢某隻蘿莉機器人隸屬於哪個女王。
-% \end{description} 
+\begin{algorithm}[caption={Binary Search}, label={alg1}]
+function Binary_Search(x, array[])
+    l = 0
+    r = n - 1 (n是array的大小)
+    while l < r
+        mid = (l + r) / 2
+        if x > array[mid]
+            l = mid + 1
+        else
+            r = mid
+    return l
+end function
+\end{algorithm}
 
 
-% \section{Search 搜尋}
-% \subsection*{Introduction}
-% 搜索，暴力的找答案，也就是要試過每個可能性後再一個一個檢查。
-% 雖然是暴力，但是寫法好或不好差別還是很大的喔！
+\subsection{常用的地方}
+1.找東西\\
+2.求符合某條件的最小(最大)值\\
+3.奇怪的互動題\\
 
-% \subsection{Enumeration 枚舉}
-% 嘗試所有的可能，然後一一檢查，找出答案。
 
-% \subsection{State Space Search 狀態空間搜索}
-% 先把問題轉成某種狀態，比如你要去學校上學，一開始在位置(0, 0) 要到位置(s, t)。現在的位置即為狀態。\\
-% 至於從(0, 0) 到 (0, 1) 就稱為狀態轉移，
-% 比如南海路也許就是一條可以讓你從家裡轉移到學校的其中一個狀態轉移的路徑。\\
-% 所有的狀態的集合就是狀態空間，在這裡面找答案就是所謂的狀態空間搜索。\\
-% 我們並不知道這個稱之為狀態空間的迷宮長怎麼樣，所以我們必須嘗試走走看，至於怎麼走才有效率，
-% 我們介紹幾個常見的演算法。
+\subsection{相關STL}
 
-% \subsection{DFS}
-% Depth First Search(深度優先搜索)，簡稱DFS。也就是一直往前走，
-% 直到遇到死路就往後退到上一個岔路並且換一條走，如果所有岔路都走完了就再往後退，直到把所有的點都搜完。
-% 跟著下圖的編號順序走訪一遍就是一個DFS順序的搜尋，當然大家的順序可能不太一樣。\\
-% \includegraphics[width=0.5\columnwidth]{DFS.png}\\
-% 實作上，我們只要用遞迴就可以輕鬆完成，也可以用Stack模擬，可是很麻煩。並且注意一定要記的紀錄走過的點。
-% \begin{algorithm}[caption={DFS}, label={alg1}]
-% function DFS(v)
-%     mark v as visited
-%     for all u that is adjacent to v do
-%         if u is not visited then
-%             DFS(u)
-%         end if
-%     end for
-% end function
-% \end{algorithm}
+\begin{description}
+\item[ 1.]upper\_bound\\
+最後一個小於val的值的位置。\\
+template <class ForwardIterator, class T, class Compare>\\
+ForwardIterator upper\_bound (ForwardIterator first, ForwardIterator last,\\
+\hspace*{2em}const T\& val[, Compare comp]);
+\item[ 2.]lower\_bound\\
+最後一個小於等於val的值的位置。\\
+template <class ForwardIterator, class T, class Compare>\\
+ForwardIterator lower\_bound (ForwardIterator first, ForwardIterator last,\\
+\hspace*{2em}const T\& val[, Compare comp]);
+\item[ 3.]binary\_search\\
+不常用(僅回傳bool)，確認val是否存在。
+\item[ 4.]equal\_range\\
+相當於make\_pair(lower\_bound(...),upper\_bound(...));
+\end{description}
 
-% \subsection{BFS}
-% Breadth First Search(廣度優先搜索)，簡稱BFS，也就是所謂的地毯式搜索。
-% 一層一層的向外擴大搜尋範圍，就像下圖的順序，直到走完所有點。
-% 當然你不可能一次走到很多點，所以下圖的數字代表層數，至於同一層的順序大家可能會不太一樣。
-% 有一個很棒的性質是，BFS的層數剛好就是起點到該點的距離。\\
-% \includegraphics[width=0.5\columnwidth]{BFS.png}\\
-% 實作BFS也很簡單，只要把DFS的Stack換成Queue就可以了。
-% \begin{algorithm}[caption={BFS}, label={alg1}]
-% function BFS(v)
-%     enqueue v to Q (Q is a queue)
-%     mark v as visited
-%     while Q is not empty do
-%         c ← pop Q
-%         for all u that is adjacent to c do
-%             if u is not visited then
-%                 push u to Q
-%                 mark u as visited
-%             end if
-%         end for
-%     end while
-% end function
-% \end{algorithm}
 
-% \subsection{BiBFS}
-% 雙向的BFS，通常是在知道起點和終點而要找最短路徑時，同時交錯在起點和終點做BFS，起點做一層，終點跟著做一層。
-% 當一個點同時被起點和終點搜到時，我們可以確定一定有一條最短路徑，從起點經過這個點到終點。\\
-% BiBFS的好處是，一般BFS必須不斷把點存進記憶體裡，假設每個點都連到N個點，那麼距離 d 的BFS就必須存入O($N^d$)個點。
-% 但是，用BiBFS我們兩個BFS的距離都剩下 $d \over 2$，所以只要存 O($N^{d \over 2}$)個點，省下了不少記憶體。
+\subsection{Exercises!!}
 
-% \subsection{IDDFS}
-% IDDFS就是限制深度的DFS，先做一個限制深度的DFS，然後不斷加深深度。
-% 這樣做的原因是避免我們走進一個又深又長的死路，白白浪費時間。
-% 因為限制了深度，到達終點時，深度剛好可以代表距離。\\
-% 也許你會覺得這樣一直重複走走過的點很浪費時間，但是從時間複雜度去分析，
-% 假設每個點都連到N個點，1~d層點數總共有O($N^{d+1}$)，
-% 而d+1層卻也有O($N^{d+1}$)個點，所以總共只差了常數時間而已。\\
-% 換句話說，IDDFS就是一個不會浪費空間的BFS，但是比BFS難寫，不過時間複雜度不變。
+\begin{description}
+\item[ 1.]<TIOJ 1208 第K大連續和>\\
+一個總長度為項的數列S，其連續和共有n(n+1)/2個。請問，這n(n+1)/2個連續和之中，第k大的是多少？
+\item[ 2.]<TIOJ 1839(IOI 2013) 洞穴Cave>\\
+你迷路了。你發現一個入口。入口被連續N個門阻隔。有N個開關分別連接到這N個不同的門。\\
+門依序由0~N-1編號，最接近你的那扇門編號為0。開關編號也是0～N-1但你並不知道哪個開關連到哪扇門。\\
+開關都位於洞穴的入口處。每個開關可以被設定成上或下。每個開關只有一個方向是正確的。若一個開關被設定在正確的方向，則其連接到的門便會打開，反之則否。每一個開關的正確方向可能不相同，現在你並不知道開關的正確方向。\\
+你可以將開關設定成任何的組合，並且走入這個洞穴觀察第一個未開的門。這些門都是不透明的，當你發現第一個未開的門時，你無法看到任何後方的門。\\
+你可以嘗試最多70,000種組合。你的任務是把所有的門都打開。
+\end{description} 
 
-% \subsection{A*}
-% A*就是把BFS裡的queue換成priority queue，也就是依照優先度去搜尋，而不是到起點的實際距離。
-% 至於優先度是甚麼呢，其實可以自己定義。A*的優先度是起點到終點的估計距離，也就是我們希望最短路徑優先被搜尋到。\\
-% 我們給每一點一個優先度 f(x) = g(x) + h(x)，其中g(x)代表起點到該點的實際距離，h(x)代表該點到終點的估計距離。
-% 我們只要挑f(x)最小的人先走，很快就可以找到最短路徑。\\
-% 不過這樣真的會是最短路徑嗎？
-% 我們可以證明，因為我們不會高估h(x)，也就是我們只要保證該點到終點的實際距離大於等於 h(x)，
-% 這樣的話如果我們由一條路徑A走到終點，另外一條 f(x)比這條路徑大的路徑B，實際距離一定比路徑B的f(x)更大，
-% 所以路徑A就是最短路徑了。
 
-% \subsection{IDA*}
-% IDA*就是IDDFS加上A*，也就是限制f(x)的長度。
-% 當我們做IDDFS時，深度(剛好就是A*裡提到的g(x))超過限制就砍掉。
-% 現在我們一樣做IDDFS，只是改成f(x)超過長度限制就砍掉(也就是不用g(x)超過限制，如果估計長度超過就可以先砍掉了。)\\
-% 因為我們保證到終點的實際長度大於等於h(x)，所以我們不會不小心砍掉可以走的路徑。
 
-% \subsection{總結}
-% 搜尋其實是很神秘又很吃人品的領域，透過簡單的DFS、BFS去拓展，想辦法剪枝(就像IDA*)，
-% 或是利用一些性質，甚至Random一下，都有機會降低複雜度。\\
-% 之後還會介紹一堆神奇的狀態空間搜索，基本上所有的問題都可以透過搜索解出來，
-% 把搜索學好可以幫助你解決很多無論是競賽還是生活上的問題。
-% (ex：遊戲中的bot走路可以用A*解決，算高維度函數可以用爆搜剪枝驗算答案等等。)\\
-% 附註：因為台灣的比賽很雷，常常演算法比賽會變成爆搜比賽，練好搜尋絕對是好處多於壞處的。
+\section{Divide \& Conquer 分而治之}
+\subsection*{Introduction}
+大陸稱之為分治，有些奇怪的人稱之為Fun Jizz或Fun and Jizz，是一種常見的算法設計方法。\\
+大致上的步驟為：
+\begin{description}
+\item[ Step 1.]切開~把問題切碎
+\item[ Step 2.]處理~把碎片解決
+\item[ Step 3.]合併~把碎片合併
+\end{description}
 
-% \subsection{Exercises!!}
-% \begin{description}
-% \item[ 1.]<TIOJ 1025 數獨問題>\\
-% 計算數獨的答案。
-% \item[ 2.]<TIOJ 1573 15-puzzle>\\
-% 給你一個 4*4 的盤面，裡面有 1 ～ 15 跟一個空格，
-% 你每次可以將一個與空格相鄰的數字移到空格上，問最少要幾步才能移動成到指定的盤面。
-% \item[ 3.]<SGU 149 Computer Network>\\
-% 給你一棵樹，問樹的直徑（任兩點最大距離）。（N <= 1000000）
-% \item[ 4.]<SGU 125 Shtirlits>\\
-% 有一個 N × N 矩陣 A，每一個數字都介於 0 ～ 9，他給你另一個 N × N 矩陣 B，
-% Bij 代表 Aij 的周圍有幾個比他大的數字。請輸出任一個可行的矩陣 A，
-% 若不存在，則輸出"NO SOLUTION"。（N <= 3）
-% \item[ 5.]<經典問題>\\
-% 給一個 M × N 的格子矩形，每個格子不是 1 就是 0，你每次可以對一個格子進行操作，
-% 把那個格子和他周圍的格子 1 變成 0、0 變成 1，問你至少要做幾次才能使所有格子都變成 0。(M, N ≤ 15)
-% \item[ 6.]<TIOJ 1099 射手座之日>\\
-% 對一個三維空間的座標 (x, y, z)，你可以做它兩件事：\\
-% (a) 把 x, y, z 任意調換\\
-% (b) 把 (x, y, z) 變成 (2y－x＋1, 2x－y－1, z)\\
-% 問有沒有可能把座標從 (x1, y1, z1) 變成 (x2, y2, z2)。
-% \item[ 7.]<TIOJ 1022 跑跑卡恩車>\\
-% 有一個高低起伏的地圖，你可以在高度差不超過5的格子之間移動。
-% 請問從起點到終點最短要走多遠。
-% \item[ 8.]<TIOJ 1013 Fire in the forest>\\
-% 在一張給定的地圖中，給你不同的起點和終點，還有一個起火點，
-% 你的速度和火的速度一樣，而火會不斷向四個方向延燒。
-% 請問你來得急在被火燒到前跑到終點嗎？
-% \item[ 9.]<TIOJ 1226 H遊戲>\\
-% 給你一個有向無環圖，問你從起點到每個終點的所有可能的路徑的路徑長和。
-% \item[ 10.]<TIOJ 1250 番茄蹲>\\
-% 有N個人排成一排，一開始都站著，主持人可以選擇一個數字k，使k的倍數編號的人蹲下，如果已經蹲下就站起來。
-% 請你列出經過M個回合後所有可能的狀況。
-% \end{description}
+\subsection{D\&C 的時間複雜度}
+時間複雜度通常都是一個遞迴函式，推出一般項的方法有亂猜後用數學歸納法證明，劃出遞迴樹以及使用主定理(Master theorem)。有興趣可以自己去Google。
+
+\subsection{常用的地方}
+許多的算法都有運用到分治的想法，例如前面所說的二分搜、merge sort、快速矩陣乘法、最近點對等等...。\\
+一般出現的時候，如果不是已經看過的類型，通常很難當場想出來。
+
+
+\subsection{Exercises!!}
+
+\begin{description}
+\item[ 1.]<TIOJ 1080 逆序數對>\\
+輸入一個數列，輸出數列中有多少數對是逆序的。
+\item[ 2.]<TIOJ 1355 河內之塔-蘿莉塔>\\
+有三根柱子，第一根上有圈圈，每個大小都不一樣，且大的在下面，然後請輸出如何把所有的圈圈移到第三根柱子上，過程中不能讓小的圈圈在大的圈圈下面。
+\item[ 3.]<TIOJ 1500 平面最近點對>\\
+給你平面上N個點，問最近的兩個點有多近。
+\item[ 4.]<POJ 1741 樹分治>\\
+給你一棵樹，問樹上距離小於等於K的點對數量。
+\item[ 5.]<TIOJ 1631 點連接遊戲>\\
+在正方形xy平面上給你N個紅點跟綠點(左上右上紅點，左下右下綠點)，保證三點不共線，請用不交叉的數個線段分別把紅點跟綠點連起來。
+\end{description}
+
+
+
+\section{Dynamic Programming 動態規劃}
+\subsection*{Introduction}
+最佳化問題(Optimization Problem)，是從諸多可行解中找出的最佳解(Optimal Solution)的問題。 \\
+動態規劃(Dynamic Programming)，簡稱DP，是解決每種最佳化問題的典型策略，許多的最佳化問題都要由一連串的決策導出，而當我們面對這些決策時，會不斷的出現擁有相似型態的子問題。\\
+
+\subsection{What}
+DP使用將原問題分解成子問題的方式推導出源問題的解答。我們常常把原問題分解成數個較容易解決的子問題，如果子問題還是過難的話，就繼續分解成更多的子問題。而當不同子問題的最佳解可能來自相同的子子問題的時候，次技巧精妙之處就是把處理過的解答存起來，以免重複計算，因此適合以DP解決的問題通常都有子問題重疊(Overlapping Subproblems)的性質，也就是不同子問題最佳解可能會包含相同的子子問題。
+
+\subsection{When}但是也不是所有最佳化問題都能使用DP來解決，適合使用DP的最佳化問題也需要滿足幾個特性才能確保DP的正確性。
+\begin{description}
+\item[ 1.]最佳子結構\\
+問題的最佳解中含有子問題 的最佳解，也就是說問題的最佳 解可以由子問題的最佳解推得。
+\item[ 2.]無後效性\\
+若子問題決定的母問題最佳 解會影響到子問題的最佳解，則 有後效性。
+\end{description}
+
+\subsection{How}
+使用DP解決問題時，我們通常會先辨認出問題的結構特徵，然後遞迴更新各個最佳解，如果有需要則會將計算過的子問題存起來，方便重複取用而不必重複計算，從而提高效率。 
+一般實作時主要分為兩種風格：
+\begin{description}
+\item[ 1.]Bottom-Up\\
+從最小的子問題開始計算答案，逐漸算出更大子問題的答案，直到算出目標解為止。\\
+優點:可以直接使用迴圈跑過整個表格計算出答案，且適當的設計迭代順序的話還可以壓縮記憶體使用量。\\
+缺點:遇到狀態較多的題目表格會太大，可能會計算無用的子問題。
+\item[ 2.]Top-Down\\
+從原問題開始遞迴計算子問題，將算過的子問題最佳解存起來，並逐步地算出答案。\\
+優點:不會計算到多於的子問題，且子問題數目很多時仍可使用。\\
+缺點:表格大小會和子問題總數一樣大，呼叫函式遞迴也需要負擔額外的成本。
+\end{description} 
+
+
+\subsection{Exercises!!}
+
+\begin{description}
+\item[ 1.]<工廠生產問題>\\
+一間工廠有兩條生產線，生產線上各有N個工作站，兩條生產線對應的工作站工作相同但是效率不同，你可以把一條生產線中的半成品轉到另外一條生產線上(需要成本)，做每件事情的成本可能都不相同，問生產一件產品所需的最小成本是多少?
+\item[ 2.]<最大正方形>\\
+給你一個只含0跟1且大小為N*N的正方形，問最大只由1組成的方形可以多大?
+\item[ 3.]<TIOJ 1029 A Game>\\
+有一串由N個正整數所組成的數列，兩個玩者輪流拿走一個最左邊或最右邊的數，直到最後所有的數都取完之後，兩個玩者分別把自己所取到數加總，分數較高的人獲勝。問兩個玩家分別所能得到的最高分數是多少?
+\item[ 4.]<切木棒>\\
+你有一根長度N 的木棒，對於長度1,2...N的木棒，某商人願意畫a1,a2...N 的價格跟你購買，如果切木棒不花錢問你最多能賺多少錢?
+\item[ 5.]<01背包問題>\\
+你擁有一個載重V的背包，和N個物品，每個物品都有各自的重量和價值，問你在不超重的前提下，最多可以裝多少價值的物品?
+\item[ 6.]<TIOJ 1816 石油>\\
+給你一個n*m的矩陣，請從中選出三個互不覆蓋的且大小為k*k的正方形，並最大化總和。
+\item[ 7.]<TIOJ 1019 兔子跳鈴鐺>\\
+給你N個鈴鐺的水平位置，你每次可以從x跳到x+1或x+2的鈴鐺上，問從第1個跳到第n個鈴鐺所需的最小水平移動距離。
+\item[ 8.]<TIOJ 1014 打地鼠>\\
+有編號1,2,...,n的地鼠動。玩家站在最左邊，與第一個地鼠洞相距1公尺，準備開始這個遊戲。編號為 i 的地鼠洞每Ti秒地鼠會出現一次。被打的地鼠不再出現，所有地鼠打完就結束遊戲，問結束遊戲所需的最少秒數。
+\item[ 9.]<codeforces 214E Relay Race>\\
+現在你有一個n*n的矩陣，你要選兩條(1,1)->(n,n)的捷徑，讓兩條路徑聯集上的數字總和最大。
+\item[ 10.]<Step5 0004 一切的開始>\\
+有N隻殭屍A1,A2,...AN排成一排，殭屍分兩種，你想要讓所有殭屍都變第一種，你可以改變一隻的屬性，或是改變A1~Ax的屬性，問你最少要改幾次。
+\item[ 11.]<Step5 0093 數Misaka妹妹>\\
+你想要數數看排了多少御坂妹妹，但你卻發現自己每連續數到n個御坂妹妹眼花，如果眼前總共有m個人在排隊，那麼有幾種排列方式是不會算錯的呢？
+\end{description}
+
+
+
+\section{Greedy 貪婪}
+\subsection{What}
+Greedy使用一個很當純的想法尋找答案，就是每次只選擇當前看似最佳的選擇。換言之我們每次都選擇當前最佳解，並期望能達到全局最佳解。因此Greedy不一定能得到問題的最佳解，但是當他被證明可行時(否則他只能獲得近似解)，Greedy通常也會是這個問題的最佳策略，因為他放棄搜尋所有解答空間，效率也因此提高很多。
+
+
+\subsection{When}
+原則上要符合兩個特性才能使用Greedy。
+\begin{description}
+\item[ 1.]最佳子結構\\
+問題的最佳解中含有子問題 的最佳解，也就是說問題的最佳 解可以由子問題的最佳解推得。
+\item[ 2.]貪婪選擇屬性\\
+每次決策時我們可以選擇當前看似最佳的選擇，並在繼續Greedy下去。也就是說每次決策的時候只考慮目前為止做過的選擇，不考慮未來可能要做的選擇或是子問題的解答。
+\end{description}
+
+
+\subsection{How}
+\begin{description}
+\item[ Step 1.]觀察\\看到題目後先想想他有沒有一些特性
+\item[ Step 2.]假設\\接者假設如果再做一個決策的時候，用怎麼樣的方法很有可能會朝向是最佳解的方向
+\item[ Step 3.]證明\\證明每次的決策"這樣做不會更差"(結果會在最佳解上)，然後增加coding信心
+\end{description}
+
+
+\subsection{Exercises!!}
+
+\begin{description}
+\item[ 1.]<賣場監視器>\\
+給你每個人進出賣場的時間，問賣場什麼時候人最多?
+\item[ 2.]<找零錢>\\
+大多數國家的貨幣面額都設計過，使得用貪婪策略都剛好會是硬幣數量最少的最佳湊法?
+\item[ 3.]<NPSC2005 pB 惱人的零錢>\\
+咚咚想要買一個價格為C的物品，告訴你咚咚和老闆個別擁有的1,5,10,20,50硬幣的數量，請輸出找完錢後咚咚最少能剩下多少硬幣?
+\item[ 4.]<TOI2015 二模>\\
+有一些面額為1,5,10,50,100,500,1000的錢幣，問你用這些硬幣最小湊不出來的錢是多少?
+\item[ 5.]<NPSC2005 pA 誰先早餐>\\
+給你n個想要吃早餐的人和一個廚師。大家可以一起吃，但是廚師一次只能做一到菜。給定每人要吃多久，及他吃的那道菜要做多久，問至少需要多少時間所有人才能都吃完?
+\item[ 6.]<Step5 0021 背包問題>\\
+有兩個背包的容量分別為N,M現在要將N+M個物品放進背包，每件物品都有它的重量，求字典序最小的放法使兩個背包分別的重量平均數加起來最小。
+\item[ 7.]<Step5 0031 蘿莉切割問題>\\
+你要將一塊長L的木板切成N段，每段長度是Ai(A1+A2...+An=L)，而將一塊長X的木板切開需要X的花費，問花費最小的方法?
+\item[ 8.]<HOJ 28 看動畫>\\
+你有一台有m個USB孔的電腦，還有編號1～N的隨身碟，現在你想要照一定的順序來看隨身碟裡的動畫，問最少的隨身碟插拔次數?
+\item[ 9.]<TIOJ 1636 錢包的路>\\
+地上有一排的錢包(每個相距1步的距離)，你每走到一個錢包上面，就可以拿走裡面的錢。當你走一步路，地上錢包裡的錢就會恢復。問你走玩N步後，最多可以獲得多少錢?
+\item[ 10.]<TIOJ 1432,1465 骨牌遊戲,H遊戲秘笈>\\
+給定一個長為N的數列，求使分成K段之後每段總和的最大值最小的分法。
+\end{description}
 
 
 \end{document}
