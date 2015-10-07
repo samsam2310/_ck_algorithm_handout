@@ -1,5 +1,5 @@
 %----------------------------------------------------------------------------------------
-%       PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
 \documentclass{article}
@@ -19,14 +19,14 @@
 \renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
 \usepackage{fontspec}   %加這個就可以設定字體
 \usepackage{xeCJK}       %讓中英文字體分開設置
-\setmainfont{Times New Roman}
+\setmainfont{Arial}
 \setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
 \XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
 \XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
 
 % \def\footnotesize{\fontsize{16}{24}\selectfont}
-% \def\small{\fontsize{16}{24}\selectfont}
-\def\normalsize{\fontsize{14}{21}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
 \def\large{\fontsize{16}{24}\selectfont}
 \def\Large{\fontsize{20}{30}\selectfont}
 \def\LARGE{\fontsize{24}{36}\selectfont}
@@ -57,7 +57,7 @@
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
 %----------------------------------------------------------------------------------------
-%       CODE INCLUSION CONFIGURATION
+%   CODE INCLUSION CONFIGURATION
 %----------------------------------------------------------------------------------------
 
 \newcounter{nalg} % defines algorithm counter for chapter-level
@@ -80,6 +80,7 @@
     }
 }
 {}
+
 
 %----------------------------------------------------------------------------------------
 %       NAME AND CLASS SECTION
