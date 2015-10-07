@@ -1,5 +1,5 @@
 %----------------------------------------------------------------------------------------
-%       PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
 \documentclass{article}
@@ -19,14 +19,14 @@
 \renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
 \usepackage{fontspec}   %加這個就可以設定字體
 \usepackage{xeCJK}       %讓中英文字體分開設置
-\setmainfont{Times New Roman}
+\setmainfont{Arial}
 \setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
 \XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
 \XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
 
 % \def\footnotesize{\fontsize{16}{24}\selectfont}
-% \def\small{\fontsize{16}{24}\selectfont}
-\def\normalsize{\fontsize{14}{21}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
 \def\large{\fontsize{16}{24}\selectfont}
 \def\Large{\fontsize{20}{30}\selectfont}
 \def\LARGE{\fontsize{24}{36}\selectfont}
@@ -57,7 +57,7 @@
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
 %----------------------------------------------------------------------------------------
-%       CODE INCLUSION CONFIGURATION
+%   CODE INCLUSION CONFIGURATION
 %----------------------------------------------------------------------------------------
 
 \newcounter{nalg} % defines algorithm counter for chapter-level
@@ -81,14 +81,15 @@
 }
 {}
 
+
 %----------------------------------------------------------------------------------------
 %       NAME AND CLASS SECTION
 %----------------------------------------------------------------------------------------
 
 % 這裡記得改
-\newcommand{\hmwkTitle}{培訓-1} % Assignment title
-\newcommand{\hmwkDueDate}{2015年9月18日（金曜日）} % Due date
-\newcommand{\hmwkClass}{演算法概論、排序、資料結構、雜湊} % Course/class
+\newcommand{\hmwkTitle}{培訓-4} % Assignment title
+\newcommand{\hmwkDueDate}{2015年10月8日（木曜日）} % Due date
+\newcommand{\hmwkClass}{圖論 I} % Course/class
 \newcommand{\hmwkAuthorName}{samsam2310} % Your name
 
 % 不需要修改
@@ -113,16 +114,61 @@
 
 %----------------------------------------------------------------------------------------
 % 從這裡開始寫
-% 標題那些的
-\section{Title}
-test。
-\subsection{subtitle}
-1234\\
-中文測試。
-\section*{SSSSSSSS2}
-1234
-\section{SSSSSSSS3}
-1234
+\section{圖論簡介}
+\subsection*{Introduction}
+圖論是離傘數學的分支，是一門以圖(Graph)為研究對象的理論。
+這裡的圖(Graph)跟圖片(Picture)是完全沒有關係的。\\
+圖(Graph)是由點(Vertex)和邊(Edge)組成，一張圖就是一群點的集合，而邊是這群點的關係。
+圖考慮的是點和點之間的關係，和點的大小、邊的粗細、兩條邊的夾角等等是沒有關係的。
+\subsection{名詞解析}
+\begin{description}
+\item[ 1.]圖(Graph)：圖是由點的集合和邊的集合組成的，可以表示為$G = (V,E)$，
+其中G是圖，V是點的集合，E是邊的集合。
+\item[ 2.]頂點(節點、Vertex、Node)：點，組成圖的元素集合，圖G的點集合用$V(G)$表示，點的數量稱為階(order)。
+\item[ 3.]邊(Edge)：點之間的關係，圖G的邊集合用$E(G)$表示。
+用$e(v_1,v_2)$代表一條連接$v_1$和$v_2$的邊，若關係是雙向的，則稱作無向邊(Undirected edge, Edge)，
+即$e(v_1,v_2) = e(v_2,v_1)$；
+若關係是單向的則稱為有向邊(Directed edge)，或是弧(Arc)，此時$e(v_1,v_2)$代表一條連接$v_1$和$v_2$的單向邊。\\
+沒有特別限制的情況下，$v_1$可以等於$v_2$，$v_1$到$v_2$也不一定只有一條邊。
+\item[ 4.]相鄰(Adjacent)：表達點之間的關係，$v_1$和$v_2$相鄰若且為若存在$e(v_1,v_2)$或$e(v_2,v_1)$。
+\item[ 5.]無向圖(Undirected Graph)：所有的邊皆為無向邊的圖。
+\item[ 6.]有向圖(Directed Graph)：所有的邊皆為有向邊的圖。
+\item[ 7.]混和圖(Mixed Graph)：有有向邊也有無向邊的圖。
+\item[ 8.]路徑(Path)：點邊交錯的序列，$v_1,e_1,v_2,...,e_n-1,v_n$，可以當作從$v_1$走到$v_n$的一條路，其中所有的
+$v_i \in V(G), e_i \in E(G), e_i = e(v_i, v_{i+1})$。
+\item[ 9.]簡單路徑(Simple Path)：點跟邊都不重複的一條路徑。
+\item[ 10.]環(Cycle)：一條路徑，至少有一條邊，而且$v_1 = v_n$。
+\item[ 11.]簡單環(Simple Cycle)：除了起點(終點)之外點邊都不重複的環。
+\item[ 12.]度數(Degree)：一個點$v$的度數代表該點點連接著多少邊，記做$deg(v)$。
+\item[ 13.]入度(In-Degree)：從其他點指向點$v$的有向邊數量，記做$deg^+(v)$。
+\item[ 14.]出度(Out-Degree)：從點$v$指向其他點的有向邊數量，記做$deg^-(v)$。
+\end{description}
+可以思考一下，$\sum_{v \in V(G)}deg(v) = 2|E|$，
+$\sum_{v \in V(G)}deg^+(v) = \sum_{v \in V(G)}deg^-(v) = |E|$(握手定理)。
+
+\subsection{存圖的方法}
+存圖的方法會直接影響圖論演算法的複雜度，為了解決資訊競賽中的圖論問題，我們必須要思考怎麼樣有效率的存一張圖，以下有幾個方法。
+
+\begin{description}
+\item[ 1.]Adjacent Matrix 鄰接矩陣：以一個矩陣A紀錄一張圖G。
+$a_{ij}$紀錄邊$e(v_i,v_j)$，的資訊(是否存在或是權重多少)。
+優點是實作非常簡單，可以$O(1)$查詢修改任意邊的資訊，
+缺點是無法處理重邊，空間和時間複雜度最少都是$O(|V|^2)$
+\item[ 2.]Adjacent List 鄰接列表：對每一個點開一個列表(可以是任何的資料結構，比如vector、link list)紀錄該點和與他相鄰的邊的資訊，
+優點是空間複雜度降到了$O(|E|+|V|)$、可以記錄重邊，
+缺點是實作稍微複雜一點，插入或刪除邊的方式取決於所使用的資料結構。
+\item[ 3.]Forward Star 前向星：將所有的邊存在一個陣列裡面，並依照某種順序排序，使得每一個點$v$連出去的邊都在一個區間裡，通常對於邊$(v_i,v_j)$，先照$v_i$大小排序，如果相同再照$v_j$大小排序。
+是一個很好的資料結構，大部分操作都是線性的，只是實作麻煩。
+\end{description}
+
+
+\section{子圖與特殊圖}
+\subsection{名詞解析}
+\begin{description}
+\item[ 1.]子圖 Subgraph：如果兩個圖$G = (V,E), G' = (V',E')$且$V' \subseteq V, E' \subseteq E$，則$G'$為$G$的子圖。
+\item[ 2.]補圖 Compilment Graph：圖$G$的補圖$G^c$，滿足$V(G^c) = V(G)$且$e \in E(G) \leftrightarrow e \notin E(G^c)$。
+\item[ 3.]生成樹 Spanning tree：
+\end{description}
 
 
 % 範例題目的格式
@@ -139,6 +185,7 @@ test。
 \item[ 5.]<TIOJ 1631 點連接遊戲>\\
 在正方形xy平面上給你N個紅點跟綠點(左上右上紅點，左下右下綠點)，保證三點不共線，請用不交叉的數個線段分別把紅點跟綠點連起來。
 \end{description}
+
 
 
 % caption 是標題，裡面是虛擬碼。
