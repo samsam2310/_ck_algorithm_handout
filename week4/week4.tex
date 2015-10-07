@@ -167,41 +167,257 @@ $a_{ij}$紀錄邊$e(v_i,v_j)$，的資訊(是否存在或是權重多少)。
 \begin{description}
 \item[ 1.]子圖 Subgraph：如果兩個圖$G = (V,E), G' = (V',E')$且$V' \subseteq V, E' \subseteq E$，則$G'$為$G$的子圖。
 \item[ 2.]補圖 Compilment Graph：圖$G$的補圖$G^c$，滿足$V(G^c) = V(G)$且$e \in E(G) \leftrightarrow e \notin E(G^c)$。
-\item[ 3.]生成樹 Spanning tree：
+\item[ 3.]生成樹 Spanning tree：若圖$T$是一棵樹，且$V(G) = V(T)$，我們就稱$T$為圖$G$的生成樹。
 \end{description}
 
+\subsection{簡單圖(Simple Graph)}
+一張不包含重邊($e_i = e_j $)或自環($e(v_i,v_i)$)的圖就稱為簡單圖。
 
-% 範例題目的格式
+\subsection{連通圖(Connected Graph)}
+若一張圖$G$滿足任兩點$v_i,V_j$都有一條路徑連接，則$G$為聯通圖。
+
+\subsection{有向無環圖(DAG)}
+有向無環圖，也就是一張沒有環的有向圖，DP的狀態轉移關係構成的圖其實就是一張DAG。所以任何的DP都可以當成在一張DAG上找出$A$到$B$的最短(長)路走法。
+
+\subsection{二分圖(Bipartite Graph)}
+如果一張無向圖$G$滿足，把點分成兩個集合$V_1,V_2$，使得所有$e(v_i,v_j) \in E(G)$且$v_i,v_j$不在同一個集合，我們就稱$G$是二分圖。\\
+另外一種說法是，無向圖$G$是二分圖若且為若$G$可以進行黑白染色(把所有點染成黑白並使得黑白點不相鄰)。
+
+\subsection{完全圖(Complete Graph)}
+如果無向圖$G$滿足任兩個點之間有邊，則稱$G$為完全圖。
+
+\subsection{平面圖(Plannar Graph)}
+若一張圖$G$上可以畫在平面上且邊都不會相交，則稱$G$為平面圖。
+一個平面圖的邊會把平面切成數個不同的區塊，記做$F$。
+Euler提出一個定理$|V|-|E|+|F|=2$。
+
+\subsection{樹(Tree)}
+如果一個無向的簡單圖$G$滿足$G$是沒有環的聯通圖，那我們就稱$G$為一顆樹(Tree)。
+
+\subsection{有向樹(Directed Tree)}
+在有向圖$G$中，如果存在一點$v$使得$deg^+(v)=0$，且任何其他點$u$滿足$deg^+(u)=1$並且從$v$到$u$有且僅有一條簡單有向路徑連接，我們就稱$G$是一個以$v$為根的有向樹。
+
+\subsection{樹的一些性質}
+\begin{description}
+\item[ 1.]連通圖$G$沒有環，則在$G$隨便加一條邊便會有環。
+\item[ 2.]連通圖$G$隨便拔掉一條邊便會造成不連通。
+\item[ 3.]連通圖$G$中任一兩點只有一條簡單路徑相連。
+\item[ 4.]連通圖$G$的邊數與點數的關係為$|E| = |V| -1$
+\item[ 5.]連通圖$G$的邊數等於點數則稱$G$為頂環樹(水母圖)。
+\end{description}
+
 \subsection{Exercises!!}
 \begin{description}
-\item[ 1.]<TIOJ 1080 逆序數對>\\
-輸入一個數列，輸出數列中有多少數對是逆序的。
-\item[ 2.]<TIOJ 1355 河內之塔-蘿莉塔>\\
-有三根柱子，第一根上有圈圈，每個大小都不一樣，且大的在下面，然後請輸出如何把所有的圈圈移到第三根柱子上，過程中不能讓小的圈圈在大的圈圈下面。
-\item[ 3.]<TIOJ 1500 平面最近點對>\\
-給你平面上N個點，問最近的兩個點有多近。
-\item[ 4.]<POJ 1741 樹分治>\\
-給你一棵樹，問樹上距離小於等於K的點對數量。
-\item[ 5.]<TIOJ 1631 點連接遊戲>\\
-在正方形xy平面上給你N個紅點跟綠點(左上右上紅點，左下右下綠點)，保證三點不共線，請用不交叉的數個線段分別把紅點跟綠點連起來。
+\item[ 1.]<IOI 2008, HOJ 247, TIOJ 1812 島>\\
+算出頂環樹的最長簡單路徑($|V| \leq 10^5$)
+\item[ 2.]<IOI 2013, HOJ 288, TIOJ 1838 Dreaming>\\
+給你很多棵樹，你決定把這些樹用長$l$的邊連起來成為一棵大樹，問所有方案中使得該棵大樹的最遠點對距離最小。($N \leq 10^5$)
+\item[ 3.]<99全國賽, HOJ 75 鋪磁磚>\\
+你有n($n \leq 500$)個正方形磁磚，然後你規定某些磁磚要放在某些磁磚的上面或是右邊，你希望找出一個符合規定的放法，使得可以圍住這些磁磚的最小矩形面積最小。
 \end{description}
 
 
+\section{圖的遍歷}
+Graph traversal指的是一張圖$G$從某點$v$開始，依照某種順序去拜訪相鄰於已拜訪的點的點，最後拜訪過所有點。若子圖$T$為拜訪時走的邊與點的集合，不難發現$T$會是$G$的生成樹。我們稱$T$為搜索生成樹。
 
-% caption 是標題，裡面是虛擬碼。
-\begin{algorithm}[caption={Binary Search}, label={alg1}]
-function Binary_Search(x, array[])
-    l = 0
-    r = n - 1 (n是array的大小)
-    while l < r
-        mid = (l + r) / 2
-        if x > array[mid]
-            l = mid + 1
-        else
-            r = mid
-    return l
+\subsection{DFS}
+深度優先搜索(DFS)就是先探索子節點的探索方式，以DFS產生的搜索生成樹稱為DFS Tree。\\
+時間複雜度是$O(|V|+|E|)$。\\
+我們可以把在DFS的過程中遇到的邊進行分類，分成以下四種：
+\begin{description}
+\item[ 1.]Tree edge：DFS Tree上的邊。
+\item[ 2.]Back edge：連到DFS Tree上的祖先的邊。
+\item[ 3.]Forward edge：連到DFS Tree上子孫的邊。
+\item[ 4.]Cross edge：不是上面的這些邊，也就是從DFS Tree上的一棵子樹連到另外一棵子樹的邊。
+\end{description}
+我們可以發現，後面兩種邊只有有向圖會出現。\\[2em]
+由於DFS是由遞迴實作，所以當圖是一條鍊的時候可能會使系統Stack溢位。解決方法除了可以用Stack模擬遞迴或是使用組語優化(Judge不一定可以用)。
+
+\subsection{BFS}
+廣度優先搜索(BFS)就是先探索兄弟節點，BFS是以Queue來遍歷。\\
+時間複雜度跟DFS一樣是$O(|V|+|E|)$。\\[2em]
+BFS Tree在無權重的圖上，代表任何一個點到根節點(root)的距離(經過的邊數)。
+
+\subsection{Time stamp 時間戳記}
+搜索的過程中，我們可以記錄一個點進入或離開的順序，稱為時間戳記，通常是越後面越大。其中因為DFS的時間戳記有很多神奇的性質，所以很常被使用。
+
+\subsection{Topological sort 拓樸排序}
+拓樸排序是希望在有向圖$G$找到一個頂點的排序$v_1,v_2,...,V_n$，使得任意兩點$v_i,v_j$若$i<j$則$e(v_j,v_i) \notin E(G)$。也就是說，如果有一條有向邊$e(v_i,v_j)$，則$v_i$要排在$v_j$的前面。\\
+一張有向圖的拓樸排序可能有很多種，也可能不存在。有向圖$G$的拓樸排序存在若且為若$G$沒有環，也就是說只有DAG存在拓樸排序。\\
+找拓樸排序的方法很多，以下是其中一種方法。
+\begin{algorithm}[caption={Topo sort}, label={alg1}]
+function Topo_sort (G(V,E))
+    a ← []
+    Q is a Queue
+    for all v in V do
+        if deg+(v) == 0 then
+            enqueue v to Q
+        end if
+    end for
+    while Q is not empty do
+        u ← dequeue Q
+        append u to a
+        for all v is adjacent to u do
+            deg+(v) ← deg+(v) − 1
+            if deg+(v) == 0 then
+                enqueue v to Q
+            end if
+        end for
+    end while
+    if |a| != |V| then
+        return No Topological sort
+    else
+        return a
+    end if
 end function
 \end{algorithm}
+其實還有另外一種方法，只要把DFS的離開時間戳記由大到小排列即可得到拓樸排序，這個性質可以自己思考看看。
+
+\subsection{壓扁一棵樹}
+有些題目會要求你對樹上的一些點和其子節點進行操作。
+為了更有效率的處理，我們會希望把樹變成一個區間來操作，這樣不會比較差。所以我們想要得到一個序列$v_1,v_2,...,v_n$，使得對於所有點，他和他的所有子節點都在一個區間內，也就是所謂的把樹壓扁。\\[2em]
+我們可以透過DFS時間戳記來達到這件事，我們可以發現，子節點$v$的進入時間戳記一定大於祖先$v_a$(不一定是爸爸)，而任時間戳記值介於祖先$v_a$和節點$v_s$的點$v'$，一定是$v_a$的後代，但是不一定是$v_s$的祖先。\\
+所以我們把進入時間戳記排序，就可以用一個區間代表有向樹的某個子節點的集合了。
+
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<101全國賽 禮物盒>\\
+你有n($n \leq 5000$)個正方形底(底邊互不相同)且高度不一定一樣的盒子，你希望能用最多盒子來把你的小小小禮物層層包住，請問你最多可以用幾個盒子。
+\item[ 2.]<POI XVII, HOJ 96 Teleporter>\\
+給你一張n($n\leq 40000$)個點m($m\leq 10^6$)條邊的無向圖，請問你可以再多加幾條邊(不能有重邊跟自環)使得點1跟點2的距離 > 4 (原圖保證點1和點2距離>4)。
+\item[ 3.]<TIOJ 1092 跳格子遊戲>\\
+給你一個DAG，兩位玩家輪流從起點各走一步，走到終點的人贏。如果兩人每步都是對自己最有利的路徑，請問最後誰會贏。
+\item[ 4.]<UVa 200 - Rare Order>\\
+有一個不知道順序的字元集。給你很多這個字元集組成的字串，並告訴你這些字串是依照這個字源集的字典序排好的。請輸出每個字符的大小關係。
+\end{description}
+
+
+\section{連通元件}
+若圖$G$的子圖$G'$滿足某種性質，且在$G'$中再加入其他點便無法維持這性質，則稱$G'$為聯通元件。
+\subsection{強連通(Strong Connected Component SCC)}
+若子圖$G'$是強連通，則對於其中任兩點u, v分別存在著由u到v跟由v到u的路徑。明顯的，強連通在無向圖上等價於連通圖，所以通常我們只討論有向圖的SCC。\\[2em]
+在有向圖上找強連通元件有很多種方法，最常見的有Tarjan's跟Kosaraju's，這裡我們來說說Kosaraju's。步驟是：
+\begin{description}
+\item[ 1.]在$G$上DFS，紀錄每個點的時間戳記。
+\item[ 2.]在反圖$G^T$(有向邊全部反向)上依照離開時間戳記大到小開始遍歷，每一次遍歷的一群點即為一個SCC。
+\end{description}
+
+\begin{algorithm}[caption={Kosaraju's}, label={alg1}]
+function Kosaraju(G, list[]SCC)
+    mark v in V (G) as unvisited
+    GT ← reverse all arc in G
+    for all v in V (G) do
+        if v is not visited then
+            DFS(v, G) with time stamp
+        end if
+    end for
+    Count ← 0
+    mark v in V (G) as unvisited
+    for all v in reverse order of time stamp do
+        if v is not visited then
+            DFS(v, GT) with time stamp
+                and add every Vertex into SCC[Count]
+            Count ← Count + 1
+        end if
+    end for
+end function
+\end{algorithm}
+
+若我們把SCC縮成一個點，並將自環和重邊刪掉，我們就會得到一張DAG。這有利於我們做一些奇怪的DP，我們可以先處理好每塊SCC中的內容，然後再從縮完點的DAG上DP找答案。
+
+\subsection{點雙連通}
+在無向圖我們會討論點雙聯通。若我們說子圖$G'$是點雙聯通，則拔掉$G'$中任何一點仍會保持$G'$是連通的。\\
+點雙連通元件會把原圖$G$的點集V分成很多不同的元件$V_1,V_2,...,V_n$，且任兩個點雙連通元件最多只會共享一個點，而該點移除後將會造成這兩個雙連通元件間不連通，稱作割點(Articulation Point)。\\
+所以找雙連通元件的方法是：
+\begin{description}
+\item[ 1.]標記所有的割點。
+\item[ 2.]遍歷所有點，但是不要跨過割點，這樣就會得到所有的雙連通元件。
+\end{description}
+
+\subsection{邊雙連通}
+跟點雙連通很像，只是點換成邊。也就是拔掉一條邊不會讓邊雙連通元件不連通。\\
+其中連結兩個邊雙連通元件的邊叫做橋(Bridge)，把橋拔掉即會造成圖不連通。\\
+邊雙聯通元件比較好找，只要把橋全部拔掉就好。
+
+\subsection{Tarjan's Algorithm}
+前面提到的割點和橋要怎麼尋找呢？
+有一個人叫做Tarjan，他發明了很多的演算法，每個都叫做Tarjan's Algorithm，我們這裡要說找橋跟割點的那一個。\\
+我們必須記錄兩個值，low跟dfn值，對無向圖進行一次DFS就可以把圖拆成一棵樹加上一些back edge，我們根據這兩種邊DP出low跟dfn值。
+\begin{description}
+\item[ 1.]$dfn(v)$：v在這棵樹的深度，又或者是DFS進入時間戳記。
+\item[ 2.]$low(v) = min(dfn(v),dfn(u),low(w))$，其中u是v的back edge連到的點，w是v的所有子節點。
+\end{description}
+你有了low和dfn之後，我們可以發現，一條邊是Bridge的話，他一定是Tree edge，而且那條邊深度比較深的那端，要是沒有辦法有人可以到達他的另外一端，他就會是橋。所以對於每個點v如果$low(v)$大於他的父節點u的$dfn(u)$，就代表$e(v,u)$是橋。\\[2em]
+割點比較複雜。如果點v是root的話，只要v有兩個以上的子節點，他就會是割點，不是root的話，只要存在一個子節點u滿足$dfn(v) \leq low(u)$(u往上最多只能連到v)，則v就是割點。\\[2em]
+這個演算法也可以找SCC，有興趣可以去找資料來研究。
+
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<TIOJ 1220 辦公室設置>\\
+給你一張無向圖G，問你G的補圖有幾個連通塊。($|V|\leq 10^5,|E|\leq 10^6$)
+\item[ 2.]<APIO 2009,HOJ 235 - ATM>\\
+給你一張有向圖，每個點有$a_i$元，你現在隨便從一點開始走，走到第n個點，走過一點就可以把錢拿走，請問你最多可以賺多少錢。($|V|\leq 5\times 10^5,|E|\leq 5\times 10^5$)
+\item[ 3.]<POI XV,HOJ 68 - Blockade>\\
+給你一張無向圖G，問你每個點拔掉後可以造成幾組點對不連通。($|V|\leq 10^5,|E|\leq 5\times 10^5$)
+\item[ 4.]<TOI 2009 入營考 P5 謠言問題>\\
+給你一張無向圖和一個起始點。請拔掉一個點使得拔掉後起點能到達的點數最少。($O(|V|+|E|)$)
+\item[ 5.]<POI XI,HOJ 100 - The Tournament>\\
+給你一張有向圖G，如果$(v_i,v_j)\in E(G)$，代表i必定贏j，否則雙方都有可能獲勝。現在舉辦一個淘汰賽，而你可以隨意安排賽程，請問那些人有可能獲勝。
+\item[ 6.]<滿案全席>\\
+你有N種食材，每種食材只能烹調成漢式或滿式其中一種。現在有Q位客人，每個客人都有想吃的兩種菜，問有沒有一種烹調方式可以讓每位客人都至少吃到一道自己想吃得菜？
+\end{description}
+
+
+\section{歐拉路徑與漢米頓路徑}
+\subsection{歐拉回路與歐拉路徑}
+歐拉迴路(Euler circuit)是在一張圖上的一個環，剛好可以把所有的邊走過一次。歐拉路徑(Euler trail)則是一條把所有邊走過一次的路徑。我們先討論無向圖上的歐拉路徑(迴路)。\\[2em]
+如果一個點的度數是奇數我們稱它為奇點，反之稱為偶點。歐拉迴路上的每個點都是偶點，歐拉路徑則是除了起點和終點是奇點外其他點都是偶點。也就是說：
+\begin{description}
+\item[ 1.]若一張圖有歐拉迴路，則每個點都是偶點。除此之外，不存在歐拉迴路。
+\item[ 2.]如果圖上有兩個奇點，則會有歐拉路徑，奇點分別會是起點和終點。除此之外，不存在歐拉路徑。
+\end{description}
+~\\我們可以用這個結論設計出尋找歐拉路徑(迴路)的演算法。($O(|V|+|E|)$)。
+
+\begin{algorithm}[caption={Euler Trial}, label={alg1}]
+function Find a Eulerian Trial(G)
+    if there is no odd node in G then
+        v ← any node in G
+    else
+        v ← an odd node in G
+    end if
+    DFS(v, G, S)
+    return S
+end function
+
+function DFS(v, G, S)
+    for all u that is adjacent to v do
+        if edge(v, u) is not visited then
+            mark edge(v, u) as visited
+            DFS(u, G, S)
+            push edge (v, u) into S
+        end if
+    end for
+end function
+\end{algorithm}
+
+有向圖也可以有以下推論：
+\begin{description}
+\item[ 1.]若所有點$deg^+(v) = deg^-(v)$，則存在歐拉迴路。
+\item[ 2.]若剛好有兩個點$v_1,v_2$滿足$deg^+(v_1) = deg^-(v_1) + 1, deg^+(v_2) = deg^-(v_2) + 1$，其他點也滿足$deg^+(v) = deg^-(v)$，則存在歐拉路徑。
+\end{description}
+
+\subsection{漢米頓路徑與漢米頓迴路}
+漢米頓路徑(Hamilton trail)為圖上的一條簡單路徑，剛好經過所有的點。
+漢米頓迴路則是經過所有點後回到起點的漢米頓路徑。\\[2em]
+你可能會覺得漢米頓路徑有著跟歐拉路徑一樣簡單的解法，但是其實漢米頓路徑是NP-Complete問題，目前最好的解法是狀態壓縮DP，可以達到$O(|V|^2 \times 2^{|V|})$的複雜度。
+
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<旅行員銷售問題>\\
+找出一張圖權重和最小的漢米頓路徑(迴路)。
+\item[ 2.]<99,100 全國賽 - 中國郵差問題>\\
+給你一張無向圖$G$，找出經過所有邊的一條權重和最小的路徑，邊可以重複經過。
+\end{description}
 
 
 \end{document}
