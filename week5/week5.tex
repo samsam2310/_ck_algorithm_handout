@@ -1,0 +1,208 @@
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{caption}
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{titlesec}
+
+% My addon
+\renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
+\usepackage{fontspec}   %加這個就可以設定字體
+\usepackage{xeCJK}       %讓中英文字體分開設置
+\setmainfont{Arial}
+\setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
+\XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
+
+% \def\footnotesize{\fontsize{16}{24}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
+\def\large{\fontsize{16}{24}\selectfont}
+\def\Large{\fontsize{20}{30}\selectfont}
+\def\LARGE{\fontsize{24}{36}\selectfont}
+\def\huge{\fontsize{32}{48}\selectfont}
+\def\Huge{\fontsize{36}{54}\selectfont}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+% \chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\hmwkClass} % Top right header
+% \lfoot{\lastxmark} % Bottom left footer
+\cfoot{\thepage} % Bottom center footer
+% \rfoot{Page\ \ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+% \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%   CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\newcounter{nalg} % defines algorithm counter for chapter-level
+\DeclareCaptionLabelFormat{algocaption}{\normalsize\bf Algorithm \thenalg} % defines a new caption label as Algorithm x.y
+
+\lstnewenvironment{algorithm}[1][] %defines the algorithm listing environment
+{   
+    \refstepcounter{nalg} %increments algorithm number
+    \captionsetup{labelformat=algocaption,labelsep=colon} %defines the caption setup for: it ises label format as the declared caption label above and makes label and caption text to be separated by a ':'
+    \lstset{ %this is the stype
+        frame=tB,
+        numbers=left, 
+        numberstyle=\normalsize,
+        basicstyle=\normalsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end,} %add the keywords you want, or load a language as Rubens explains in his comment above.
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
+    }
+}
+{}
+
+
+%----------------------------------------------------------------------------------------
+%       NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+% 這裡記得改
+\newcommand{\hmwkTitle}{培訓-5} % Assignment title
+\newcommand{\hmwkDueDate}{2015年10月20日（火曜日）} % Due date
+\newcommand{\hmwkClass}{RMQ問題と塊狀資料結構} % Course/class
+\newcommand{\hmwkAuthorName}{samsam2310} % Your name
+
+% 不需要修改
+\newcommand{\hmwkClassTime}{不需要修改} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{不需要修改} % Teacher/lecturer
+
+%----------------------------------------------------------------------------------------
+%       TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\hmwkClass}
+\author{\hmwkAuthorName}
+\date{\hmwkDueDate}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\LARGE~\\[4ex]
+\centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
+\normalsize
+
+
+%----------------------------------------------------------------------------------------
+% 從這裡開始寫
+\section{RMQ問題與線段樹}
+\subsection*{Introduction}
+這裡說的線段樹，其實是一個競賽領域產稱的一個新的資料結構，以前還有另外一種線段樹，
+但是在這種線段樹出現之後，網路上幾乎都稱這種資料結構為線段樹。\\
+線段樹基本上是一顆完整二元搜尋樹，可以用來處理RMQ問題(在競賽時又常常被稱為10萬區間操作題)。\\
+所謂的RMQ，就是Dynamic Range Minimum Query，\\
+給定一個序列 S[1, n], 以及以下兩種操作：\\
+\begin{description}
+\item[ 1.]將 S[i] 改為 k
+\item[ 2.]查詢 S[i, j] 中的最小值
+\end{description}
+以上就是一個很經典的RMQ問題，這種問題通常會要求一個區間經過計算處理之後的資訊，
+並同時要求隨時更新其中的點。而處理這種問題有多種資料結構，我們一一介紹。
+
+
+\subsection{離線處理}
+RMQ問題通常N都是10萬，也就是我們必須做到$O(N lg N)$的複雜度。
+我們不難發現，如果完全不更新，我們其實是可以利用動態規劃等等方法預處理，
+讓複雜度降到$O(N)$處理，$O(1)$查詢，但是如果每次更新我們就必須重新預處理，
+複雜度退化到$O(N^2)$；而我們也可以反向操作，$O(N)$查詢，$O(1)$更新，
+但是在查詢量多時一樣會退化到$O(N^2)$。\\
+這時我們想要做的就是均攤更新和查詢的處理時間，這樣就不會因為一邊的操作數太多而超時。
+我們可以先將所有操作吃進來，根據操作數量決定要使用上述兩種方法中的哪一種，這種方法稱為離線。
+通常在問題優化很複雜、高階資料結構難以實作時，這是一個可以輕鬆獲得大量分數的方法，
+甚至有時搭配排序之後的動態規劃，甚至可以拿到所有分數。
+
+\subsection{塊狀練表}
+其實我們處理的問題，每次都是詢問一個區間，所以其實我們不一定要更新整塊。
+我們可以先把所有區間切成$\sqrt N$塊，每次更新，就把該點所在的那塊全部更新，
+查詢時，就$O(\sqrt N)$跑過每一塊計算答案。
+這樣做的複雜度變成更新和查詢都是$O(\sqrt N)$，而10萬的$O(\sqrt N)$和$O(lg N)$沒有差非常多，
+複雜度可以接受。
+
+\subsection{線段樹}
+承接塊狀練表的概念，那如果我在$\sqrt N$塊區間上再覆蓋一些區間呢？
+我們發現，我們可以不斷細分區間的寬度來達到均攤更新與查詢的目的，這時線段樹就出現了。\\
+線段樹，是一個完美二元樹(平衡而且優先填滿左節點)，每一個節點都代表一個區間。
+第一層代表全部的區間，第二層開始每層都是上一層的對半切，遞迴建構到區間寬度是1。
+概念有點類似分治，當我們切到底之後可以輕鬆處理答案，之後每一層的值都由左右子節點合併求出。\\
+很明顯的，線段樹的深度是$lg N$，每次更新只要處理其中$lg N$個節點，
+查詢查詢則是接近$2 lg N$個節點(左界跟右界)，所以複雜度就是$O(N lg N)$。
+
+
+
+\section{實作一顆線段樹}
+要實作一顆基本的線段樹，我們要實作更新和查詢兩種方法。\\
+要存一顆線段樹可以用陣列或是用指標，陣列型線段樹比較單純，而指標型線段樹則比較好擴展成持久化線段樹等等的資料結構。\\
+
+\subsection{建構}
+陣列式線段樹，因為線段樹是完美二元樹，所以我們可以用Array[1]當作根節點，
+Array[2*n]、Array[2*n+1]當作第n個點的左、右子節點。\\
+至於建構時，我們可以用遞迴函數來建構。
+傳入現在的節點編號，區間的左界跟右界，然後分別遞迴到左右子節點，並且將區間對切。
+
+\subsection{更新}
+更新有點類似建構，只是更簡單，我們只要處理有變化的點就好。
+
+\subsection{查詢}
+查詢，因為查詢的區間不可能剛好等於我們的區間，所以我們必須湊出來。
+遞迴查詢時，我們可以分出三種狀況，屬於區間、不屬於區間、剛好切到區間的邊邊。
+對於這三種狀況，如果是第一種我們可以直接計算它的值、第二種可以直接忽略、第三種則需要繼續遞迴處理。
+
+
+\section{區間更新與懶惰標記}
+當更新的點不是一個而是一個區間時怎麼辦呢？線段樹也可以處理。
+作法是在每個節點上加上一個懶惰標記(lazy tag)，這個標記可以是boolean也可以是有意義的數字。
+當我們區間更新時，我們跟查詢一樣先分成三種區間，包含、不包含、部分包含，對於後面兩種，分別是忽略和繼續遞迴處理，而第一種，我們發現底下的區間都必須更新，那我們就先記錄一個懶惰標記，當之後遇到再繼續處理。\\
+當我們在進行任何操作時，如果要遞迴的時候發現這個區間有懶惰標記，必須要先處理懶惰標記才可以繼續遞迴，這樣才能保證線段樹的正確性。
+
+
+\section{線段樹的變形}
+\subsection{Binary Indexed Tree}
+BIT是線段樹的一種變形，實做簡單，但是功能較少，通常是用來處理動態前綴和。
+他可以處理：
+\begin{description}
+\item[ 1.]單一修改, 區間 (0, k] 查詢
+\item[ 2.]區間 (0, k] 修改, 單一查詢
+\item[ 3.]可藉由排容原理所得到的值 (如總和)
+\end{description}
+比較有趣的是BIT的實作，因為我們現在只關心從頭開始的區間，所以我們可以將線段樹的右節點全部刪去，
+形成一顆只有左節點的樹，而此時我們就發現，這些左節點的右界都不一樣，可以透過這些節點得到全部的前綴。
+歸納其記錄的區間我們得到一個公式，索引值為 k 的節點，其所維護的區間是 (k − 2i, k]，i 稱為 k 的lowbit，即為二進位表示中從最低位數來第一個非 0 的位數，lowbit 可以由以下的方法算出:
+$$2^l = k\&(−k)$$
+查詢 (0, k] 區間時，其結果便是 (k − lowbit(k), k] 和 (0, k − lowbit(k)] 合併後的結果。前者恰
+好就是 BIT 在 k 所維護的區間，而後者只需遞迴下去計算即可。對於單一操作，則可以發現 $k_0 = k, k_j = k_j−1 + lowbit(k_j−1)$ 恰好就是覆蓋 k 的所有區間。由於只須維持 (0, k]的區間，故兩者的複雜度皆為 $O(lg n)$。
+
+\subsection{K 維線段樹}
+對於一個 2 維的線段樹，其每個節點是一棵樹，第一層樹紀錄 x 坐標，而此 x 樹的節點是一個紀錄 y 坐標的樹，而 k 維則依此類推。不過我們通常不會用超過 2 維 (甚至連 2維都很少用) 這是由於空間複雜度的限制。2 維線段樹有個致命傷，便是無法進行區塊修改 + 區塊詢問，因為在二維以上的區間，會出現兩區塊在不同維坐標互相包含的情況，此情形會造成同一個點被許多不相為父子節點的區間包含，因此無法實作。線段樹有另一個generalization 叫做 Quadtree 和 Octree，它們操作的時間複雜度會比較高一些。\\
+至於樹狀數組的高維度則比較容易實作，以二維為例只須建立一個二維陣列 S，其中 $S[i][j]$維護 $(i − lowbit(i), i] × (j − lowbit(j), j]$ 區塊之值，其操作和一維的類似，只是複雜度變為$O(lg^2 n)$。
+
+
+\end{document}
