@@ -156,8 +156,6 @@ RMQ問題通常N都是10萬，也就是我們必須做到$O(N lg N)$的複雜度
 很明顯的，線段樹的深度是$lg N$，每次更新只要處理其中$lg N$個節點，
 查詢查詢則是接近$2 lg N$個節點(左界跟右界)，所以複雜度就是$O(N lg N)$。
 
-
-
 \section{實作一顆線段樹}
 要實作一顆基本的線段樹，我們要實作更新和查詢兩種方法。\\
 要存一顆線段樹可以用陣列或是用指標，陣列型線段樹比較單純，而指標型線段樹則比較好擴展成持久化線段樹等等的資料結構。\\
@@ -176,6 +174,54 @@ Array[2*n]、Array[2*n+1]當作第n個點的左、右子節點。\\
 遞迴查詢時，我們可以分出三種狀況，屬於區間、不屬於區間、剛好切到區間的邊邊。
 對於這三種狀況，如果是第一種我們可以直接計算它的值、第二種可以直接忽略、第三種則需要繼續遞迴處理。
 
+
+\subsection{虛擬碼}
+由於線段樹的實作非常靈活，沒有一貫的模版，這裡舉例求區間最小值的線段樹該怎麼實作。
+
+建構。
+\begin{algorithm}[caption={Build}, label={alg1}]
+function Build(index, L, R)
+    if L = R then
+        Seg[index] = Array[L]
+        return Seg[index]
+    else
+        mid = (L+R)/2
+        a1 = Build(index*2, L, mid)
+        a2 = Build(index*2+1, mid+1, R)
+        return min(a1, a2)
+end function
+\end{algorithm}
+
+更新X點，把值改成U。
+\begin{algorithm}[caption={Update}, label={alg1}]
+function Update(index, L, R, X, U)
+    if X not in [L, R] then
+        return Seg[index]
+    else if L = R then
+        Seg[index] = U
+        return U
+    else
+        mid = (L+R)/2
+        a1 = Update(index*2, L, mid, X, U)
+        a2 = Update(index*2+1, mid+1, R, X, U)
+        return min(a1, a2)
+end function
+\end{algorithm}
+
+查詢區間[A,B]。
+\begin{algorithm}[caption={Query}, label={alg1}]
+function Query(index, L, R, A, B)
+    if [L, R] ⊆ [A, B] then
+        return Seg[L]
+    else if [L, R] ∩ [A, B] = {} then
+        return Infinity
+    else
+        mid = (L+R)/2
+        a1 = Query(index*2, L, mid, A, B)
+        a2 = Query(index*2+1, mid+1, R, A, B)
+        return min(a1, a2)
+end function
+\end{algorithm}
 
 \section{區間更新與懶惰標記}
 當更新的點不是一個而是一個區間時怎麼辦呢？線段樹也可以處理。
@@ -203,6 +249,22 @@ $$2^l = k\&(−k)$$
 \subsection{K 維線段樹}
 對於一個 2 維的線段樹，其每個節點是一棵樹，第一層樹紀錄 x 坐標，而此 x 樹的節點是一個紀錄 y 坐標的樹，而 k 維則依此類推。不過我們通常不會用超過 2 維 (甚至連 2維都很少用) 這是由於空間複雜度的限制。2 維線段樹有個致命傷，便是無法進行區塊修改 + 區塊詢問，因為在二維以上的區間，會出現兩區塊在不同維坐標互相包含的情況，此情形會造成同一個點被許多不相為父子節點的區間包含，因此無法實作。線段樹有另一個generalization 叫做 Quadtree 和 Octree，它們操作的時間複雜度會比較高一些。\\
 至於樹狀數組的高維度則比較容易實作，以二維為例只須建立一個二維陣列 S，其中 $S[i][j]$維護 $(i − lowbit(i), i] × (j − lowbit(j), j]$ 區塊之值，其操作和一維的類似，只是複雜度變為$O(lg^2 n)$。
+
+section{Exercises!!}
+\begin{description}
+\item[ 1.]<經典題 動態區間最小值>\\
+給你一個序列，有Q筆操作，每次操作可能是修改一個點的值或是查詢一個區間的最小值。
+\item[ 2.]<經典題 區間更新區間和>\\
+給你一個序列，有Q筆操作，每次操作可能是將某個區間加X或是查詢一個區間的區間和。
+\item[ 3.]<Step5 0142 堆石子遊戲>\\
+給你一個N*N的盤面，有多筆操作，每次可以在某個座標放上X顆石子或是查詢一個矩型區間中所有的石子數量。
+\item[ 4.]<Step5 0150 花匠>\\
+給你一個序列，有多筆操作，每次可以將一個區間的值全部XOR或是查詢一個區間的區間和。
+\item[ 5.]<TIOJ 1224 矩形覆蓋面積計算>\\
+給你一堆矩形，問你這些矩形的覆蓋面積是多少（另外一種類似的題目是問周長是多少）？
+\item[ 6.]<TIOJ 1045 細菌培養>\\
+給你一個矩形，每一格都有一個數字，每次操作將一個子矩形中的數字都乘以二，求最後所有的數字和。
+\end{description}
 
 
 \end{document}
