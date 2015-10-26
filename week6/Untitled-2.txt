@@ -1,0 +1,282 @@
+Minimum Spanning Tree
+	生成樹:Spanning tree,一顆包含圖上所有節點的樹，權重為所包含的邊的權重和。
+	最小生成樹:Minimum Spanning Tree,權重最小的生成樹
+	性質1:設T是G=(V,E)的MST。若刪除e(u,v)∈T則T會被分解成兩顆子樹Ta,Tb。且Ta跟Tb分別是G的子圖的MST且不相交。
+	由上可知，MST含有最佳子結構屬性，因此可能可以用dynamic programming或greedy algorithm求得。
+	性質2:設T是G=(V,E)的MST。在所有非自環邊中權重最小的邊必定∈T;
+	由上可知，MST含有切割屬性，把所有非自環邊中權重最小的邊加入T是合法的。也就是這條定理給的我們MST的貪婪選擇屬性。
+	Prim's Algorithm
+		Prim的演算法存任意一個節點開始，一步一步的擴展生成樹，每次選擇從樹上點連到非樹上點中權重最小的邊做擴張，直到所有節點都被加到樹上為止。
+		實作上有兩種複雜度O(ElogV),O(EV^2)
+		Graph Minimum_Spanning_Tree::Prim(G)
+			T=G.V[0];
+			while(G.V==T.V)
+				e=min(w(T.V,G.V-T.V));
+				T+=e;
+			return T;
+	Kruskal's Algorithm 
+		Kruskal的演算法是將所有邊按權重排序，再由小到大加入，並檢查會不會在樹上形成環，如果會則跳過，否則就加入樹裡。
+		此方法的正確性仰賴切割性質
+		實作上可以用disjoint set來檢查是否形成環。
+		時間複雜度O(ElogE+E×α(V)) 
+		Graph Minimum_Spanning_Tree::Kruskal(G)
+			Graph T=NULL;
+			Queue Q=sort(G.E);
+			while(G.V==T.V)
+				if(Tree_ID(Q[0].u)!=Tree_ID(Q[0].u))
+					T+=Q[0];
+				Q.pop_front();
+			return T;
+Single Source Shortest Path
+	如何高效計算單個起點到圖上其他點的最短路徑，也就是單源最短路徑
+	BFS/DFS
+		特殊圖(如樹、DAG)，或是每條邊的權重都依樣則可使用
+	Dijkstra's Algorithm
+		Dijkstra和Prim很像，Prim每次尋找不在樹上距離樹最近的點，而Dijkstra則是尋找不在樹上距離起點最近的點擴張。
+		Dijkstra的正確性仰賴三角不等式，若圖上存在邊權是負的會導致三角不等式不成立，因此Dijkstra演算法只能處理邊權皆為正的圖。
+		時間複雜度O(ElogV)
+		Array Single_Source_Shortest_Path::Dijkstra(G,s)
+			Array d(G.V)=INFINITE;
+			d[s]=0;
+			Heap H(s);
+			while(!H.empty())
+				v=H.pop_top();
+				for(e:G[v].E)
+					if(d[e.u]>d[v]+e.w)
+						d[e.u]=d[v]+e.w;
+						Heap.push_replace(e.u,d[e.u]);
+			return d;
+	Bellman-Ford Algorithm
+		Dijkstra雖然快，卻不能處理有負權的圖，對於存在負權的圖我們常常採用Bellman-Ford演算法。
+		我們先定義一個動作較鬆弛(relax):若d[v]代表起點到v的最短路徑，若存在點u使得d[u]>d[v]+w[u][v]則我們可以更新d[u]，這個動作就稱為用v鬆弛u。
+		我們可以稍微修改Dijkstra算法的策略，把針對節點鬆弛改為針對邊鬆弛，若每條邊都考慮一次後，沒有任何節點被鬆弛則說明瞭所有最短路徑都被找出，否則就要在考察一次所有邊。
+		而我們可以證明對於所有不存在負環的圖，都可以在|V|-1輪內找出所有最短路徑，無論是否存在負權邊。若重複了|V|-1次後仍然有邊可鬆弛則代表圖上有負環，因此Bellman-Ford演算法也可用在判斷圖上有無負環
+		時間複雜度O(VE)
+		Array Single_Source_Shortest_Path::Bellman_Ford(G,s)
+			Array d(G.V)=INFINITE;
+			d[s]=0;
+			for(i in 1..G.V.size())
+				Bool relax=0;
+				for(e:G.E)
+					if(d[e.u]>d[e.v]+e.w)
+						d[e.u]=d[e.v]+e.w;
+						relax=1;
+				if(!relax)
+					break;
+				if(i==G.V.size())
+					throw Error;
+			return d;
+	Shortest Path Fast Algorithm
+		俗稱的SPFA演算法只是Bellman-Ford的一個優化，基本想法是一個點必須被鬆弛過纔有必要用來鬆弛別的點。
+		此演算法曾由西南交通大學段凡丁《關於最短路徑的 SPFA 快速算法》重新發現，於是中文網路出現了 Shortest Path Faster Algorithm, SPFA 的通俗稱呼。學術上查無此稱呼，請勿濫用。
+		實作上可以用一個容器(例如Queue、Stack)來存放目前被鬆弛過的點，每次從容器中取一個點v來鬆弛與之相鄰的點u，若u成功被鬆弛了，則把u丟入容器中。
+		如同Bellman-Ford一樣，我們可以開一個陣列紀錄一條邊鬆弛了幾次，來判斷圖上有無負環。
+		時間複雜度O(VE)，平均情況下期望時間複雜度為O(E)
+		證明的網址:http://goo.gl/0UPjEF
+		因為複雜度不穩定，因此如果是在正權圖上，還是建議用複雜度較穩定的Dijstra	
+		Array Single_Source_Shortest_Path::SPFA(G,s)
+			Array relax(G.E)=0;
+			Array d(G.V)=INFINITE;
+			d[s]=0;
+			Queue Q(s);
+			while(!Q.empty())
+				v=Q.pop_top();
+				for(e:G[v].E)
+					if(d[e.u]>d[v]+e.w)
+						d[e.u]=d[v]+e.w;
+						if(++relax[e]==G.V)
+							throw Error;
+						if(!Q.find(u))
+							Q.push(u);
+			return d;
+All Pairs Shortest Path
+	找出圖G上所有點對的最點距離，稱為全點對最短路徑問題
+	我們當然可以在圖上運行V次Single Source Shortest Path，但是要嘛不能處理負邊，要嘛複雜度太高，要嘛複雜度不穩定。
+	因此我們想要有一個更加簡潔且複雜度漂亮的演算法。
+	Floyd-Warshall Algorithm
+		Floyd-Warshall演算法使用DP的技巧，我們定義dp[k][i][j]代表節點i到j只通過集合{0..k}的最短路徑大小。
+		因此:dp[k][i][j]=min(dp[k-1][i][j],dp[k-1][i][k]+dp[k-1][k][j]);
+		實作上dp表格可以用滾動的方式節省記憶體
+		時空複雜度O(V^3)
+		Array<Array> All_Pairs_Shortest_Path::Floyd_Warshall(G)
+			Array<Array> dp(G.V,G.V)=INFINITE;
+			for(k:G.V)
+				for(i:G.V)
+					for(j:G.V)
+						dp[i][j]=min(dp[i][j],dp[i][k]+dp[k][j]);
+			return dp;
+	Johnson's Algorithm
+		如果圖上沒有負邊，那麼運行|V|次Dijkstra的時間成本可能優於Floyd-Warshall。那麼是否存在有負權的情況下也能使用這個優秀演算法的方法呢?
+		Johnson的演算法可以將圖上的負權轉換為正權，我們只需先運行一次Johnson演算法把圖G轉為正權圖，接者就可以使用Dijkstra求出全點對最短路徑了。
+		Johnson演算的的精隨是:
+		對於每個節點賦予他一個權值h[v]，且對每條邊賦予新權重w'[u][v]=w[u][v]+h[u]-h[v]>=0後得到新圖G'
+		這樣在G'上求出來的距離是:
+			d'[s][t]=w'[s][v[1]]+w'[v[1]][v[2]]+...+w'[v[k],t];
+			d'[s][t]=w[s][v[1]]+h[s]-h[v[1]]+w[v[1]][v[2]]+h[v[1]]=h[v[2]]...+w[v[k],t]+h[v[k]]-h[t];
+			d'[s][t]=w[s][v[1]]+w[v[1]][v[2]]+...+w[v[k],t]+h[s]-h[t];
+			d'[s][t]=d[s][t]+h[s]-h[t],d'[s][t]>=0;
+		也就是說我們只要求出d'也就能在常數時間內轉換出d，因為G'是正權圖，所以可以使用Dijkstra。
+		剩下的問題就是h的求法，而這正是Johnson演算法的精妙之處，他發現只要將所求的w[u][v]+h[u]-h[v]>=0移項後就會變成h[v]<=h[u]+w[u][v]，也就是說h[v]的其中一個解就是d[v]，而d[v]只需用一次Bellman-Ford就可求得。
+		那我們要用哪一個起點求得d[v]呢?若是用了不好的起點，可能會求不出所有的d[v]，因此Johnson想出了一個方法就是重新設立一個超級原點s，並對圖上所有點u新增連到的邊，且邊權為0，這樣就能保證可以對所有節點求出d[v]了。
+		總時間複雜度是O(VE+VElogV)在稀疏圖上比Floyd-Warshall更佳
+二分圖最大匹配
+	匹配:在圖論中，一個「匹配」(matching)是一個邊的集合，其中任意兩條邊都沒有公共頂點。
+	最大匹配:一個圖所有匹配中，所含匹配邊數最多的匹配，稱爲這個圖的最大匹配。
+	完美匹配:如果一個圖的某個匹配中，所有的頂點都是匹配點，那麼它就是一個完美匹配。
+	匈牙利演算法
+		交替路:從一個未匹配點出發，依次經過非匹配邊、匹配邊、非匹配邊…形成的路徑叫交替路。
+		增廣路:從一個未匹配點出發，走交替路，如果途徑另一個未匹配點（出發的點不算），則這條交替路稱爲增廣路（agumenting path）。
+		增廣路有一個重要特點：非匹配邊比匹配邊多一條。因此，研究增廣路的意義是改進匹配。只要把增廣路中的匹配邊和非匹配邊的身份交換即可。由於中間的匹配節點不存在其他相連的匹配邊，所以這樣做不會破壞匹配的性質。交換後，圖中的匹配邊數目比原來多了1條。
+		我們可以通過不停地找增廣路來增加匹配中的匹配邊和匹配點。找不到增廣路時，達到最大匹配（這是增廣路定理）。
+		Int Matching::Hungary(G)
+			Array<Node> go=NULL;
+			Array<Bool> used;
+			Int ans=0;
+			for(Node i:G.X)
+				used=0;
+				Function F=(Node now)->Bool{
+					for(Node j:G[now])
+						if(!used[j]++&&(go[j]==NULL||F(go[j])))
+							go[j]=now;
+							return 1;
+					return 0;
+					};
+				ans+=F(i);
+			return ans;
+	Hopcroft‐Karp Algorithm
+		匈牙利演算法的改進版本
+		在匈牙利算法中，我們每次尋找一條增廣路來增加匹配集合M。可以證明，每次找增廣路的複雜度是O(E)，一共需要增廣O(V)次，因此總時間複雜度為O(VE)。
+		為了降低時間複雜度，在Hopcroft‐Karp算法中，我們在增加匹配集合M時，每次尋找多條增廣路。可以證明，這樣迭代次數最多為2sqrt(V)，所以時間複雜度就降到了O(sqrt(V)E)。
+	最大權二分匹配問題
+		最大權二分匹配問題就是給二分圖的每條邊一個權值，選擇若干不相交的邊，得到的總權值最大。
+		Kuhn–Munkres Algorithm
+			解決這個問題可以用Kuhn–Munkres算法(簡稱KM)。理解KM算法需要首先理解“可行頂標”的概念。可行頂標是指關於二分圖兩邊的每個點的一個值lx[i]或ly[j]，保證對於每條邊w[i][j]都有lx[i]+ly[j]-w[i][j]>=0。如果所有滿足lx[i]+ly[j]==w[i][j]的邊組成的導出子圖中存在一個完美匹配，那麼這個完美匹配肯定就是原圖中的最大權匹配。理由很簡單：這個匹配的權值之和恰等於所有頂標的和，由於上面的那個不等式，另外的任何匹配方案的權值和都不會大於所有頂標的和。
+			但問題是，對於當前的頂標的導出子圖並不一定存在完美匹配。這時，可以用某種方法對頂標進行調整。調整的方法是：根據最後一次不成功的尋找交錯路的DFS，取所有i被訪問到而j沒被訪問到的邊(i,j)的lx[i]+ly[j]-w[i][j]的最小值d。將交錯樹中的所有左端點的頂標減小d，右端點的頂標增加d。經過這樣的調整以後：原本在導出子圖裏面的邊，兩邊的頂標都變了，不等式的等號仍然成立，仍然在導出子圖裏面；原本不在導出子圖裏面的邊，它的左端點的頂標減小了，右端點的頂標沒有變，而且由於d的定義，不等式仍然成立，所以他就可能進入了導出子圖裏。
+			初始時隨便指定一個可行頂標，比如說lx[i]=max{w[i][j]|j是右邊的點}，ly[i]=0。然後對每個頂點進行類似Hungary算法的find過程，如果某次find沒有成功，則按照這次find訪問到的點對可行頂標進行上述調整。這樣就可以逐步找到完美匹配了。
+			值得注意的一點是，按照上述d的定義去求d的話需要O(N^2)的時間，因爲d需要被求O(N^2)次，這就成了算法的瓶頸。可以這樣優化：設slack[j]表示右邊的點j的所有不在導出子圖的邊對應的lx[i]+ly[j]-w[i][j]的最小值，在find過程中，若某條邊不在導出子圖中就用它對相應的slack值進行更新。然後求d只要用O(N)的時間找到slack中的最小值就可以了。
+			Int Matching::Kuhn_Munkres(G)
+				Array<Node> go=NULL;
+				Array<Int> lx=0,ly=0,sl;
+				Array<Bool> usx,usy;
+				Function F=(Node now)->Bool{
+					usx[now]=1;
+					for(y:G[now])
+						if(usy[y])continue;
+						Int v=lx[now]+ly[y]-G.w(now,y);
+						if(v)sl[y]=min(sl[y],v);
+						else
+							usy[y]=1;
+							if(go[y]==NULL||F(go[y]))
+								go[y]=now;
+								return 1;
+					return 0;
+					};
+				for(x:G.X)
+					sl=Infinite;
+					while(1)
+						usx=0;
+						usy=0;
+						usx[x]=1;
+						if(F(x))break;
+						Int d=Infinite;
+						for(y:G.Y)
+							if(!usy[y])
+								d=min(d,sl[y]);
+						for(z:G.X)
+							if(usx[z])
+								lx[z]-=d;
+						for(y:G.Y)
+							if(usy[y])
+								ly[y]+=d;
+							else
+								sl[y]-=d;
+				int ans=0;
+				for(y:G.Y)
+					ans+=G.w(go[y],y);
+				return ans;
+Tree
+	這裡講解一些進階的樹概念
+	重心
+		定義:將其拔掉之後剩餘的子樹中節點最多的子樹節點最少。
+		性質:可以保證拔掉重心之後，剩下的樹盡量平衡，因此可用來作樹分治
+	LCA
+		最近公共祖先:Lowest Common Ancestor,給定一個有根樹T時，對於任意兩個節點u,v，找到一個離根最遠的節點x，使得x同時為u跟v的祖先，則x就是u跟v的最近公共祖先。
+		倍增法
+			先預處理出每個點的深度跟子樹大小，還有二次方父親。查詢(a,b)時先讓兩個點跳至相同深度後，先檢查兩個點是否是同一個點如果是的話，則此點是LCA。
+			若不是的話，檢查兩個點同時向上2^X個父親，如果是同一人的話，則不要跳，否則就往上跳，接者把x--，重複做直到x<0，然後接者兩個點的父親就是LCA了。
+			Void Tree::LCT_Pretreatment(Node now,Node father)
+				now.father[0]=father;
+				now.depth=father.depth+1;
+				for(Int i=1;i<=lg(now.depth);i++)
+					now.father[i]=now.father[i-1].father[i-1];
+				for(Node x:now.kids)
+					LCT_Pretreatment(x,now);
+			Node Tree::LCA(Node a,Node b)
+				if(a.depth>b.depth)
+					swap(a,b);
+				for(Int x=b.depth-a.depth,y=x&-x;y;x^=y,y=x&-x)
+					b=b.father[lg(y)];
+				if(a==b)
+					return a;
+				for(Int i=lg(a.depth);i>=0;i--)
+					if(a.father[i]!=b.father[i])
+						a=a.father[i];
+						b=b.father[i];
+				return a.father[0];
+			轉換成RMQ
+				把樹壓平之後，你會發現變成在一個區間內求最小編號的位置，而那個位置代表的節點就是LCA。
+	樹鍊剖分
+		樹練:樹上的路徑
+		剖分:把路徑分為重鍊、輕鍊
+		兒子:一個點的子結點
+		重兒子:兒子中子樹大小最大的點
+		輕兒子:重兒子以外的其他兒子
+		重邊:連到重兒子的邊
+		輕邊:連到輕兒子的邊
+		重鍊:由重邊形成的路徑
+		輕鍊:輕邊
+		性質1:如果(u,v)是輕邊，則v的子樹大小*2<u的子樹大小
+		性質2:從根到某一點路徑上的輕鍊、重鍊個數都不大於logN
+		我們可以把每個重鍊用一顆線段樹維護，這樣我們就能在樹上做鍊的修改，查詢
+	樹壓平EX
+		我們之前樹壓平的時候，進入兒子的順序是隨便的，現在我們改成優先進入重兒子，則我們會發現樹壓平之後，每條重鍊都會是在一個區間之內，這樣我們就能同時子樹、樹鍊修改跟查詢。
+	樹心剖分
+		當我們坐樹分治的時候，我們可以把由重心所構成的樹建出來，而這個樹的深度不會超過logN，而可以利用這個性質做到一些有趣的事情，例如支援單點修改，跟查詢一個點到整棵樹的距離乘權重和等等。
+集
+	支配集(dominating set)
+		D是G的支配集:∀v∈(G.V\D),∃u∈D,(u,v)∈G.E
+		最小支配集(minimum dominating set):頂點數最少
+		從完美匹配中的每條邊取一個端點構成一個支配集?(O)
+		從最大匹配中的每條邊取一個端點構成一個支配集?(X)
+		定理:無孤立點圖中，存在支配集
+		此為NP-hard問題
+		貪心算法:每一輪遞迴總是選取能支配最多剩餘頂點的那個頂點，近似比:1+logν。
+	點獨立集(vertex independent set)
+		I是G的點獨立集:∀u,v∈I,(u, v)∉G.E
+		最大點獨立集(maximum vertex independent set):頂點數最大
+		定理:最大點獨立集=圖中點的個數-最大匹配數。
+		最大點獨立集=補圖中的最大團，此為NP-hard問題
+		但當有最大二分匹配時，求最大點獨立集的時間複雜度等同於一次 Graph Traversal 的時間。
+	點覆蓋集(vertex cover)
+		F是G的點覆蓋集:∀(u,v)∈G.E,{u,v}∩F≠∅
+		最小點覆蓋集(minimum vertex cover):頂點數最小
+		連通圖中，點覆蓋集必為支配集
+		定理:F是點覆蓋集當且僅當G.V\F是點獨立集
+		一樣是NP-hard問題
+		但是在二分圖上可以利用二分圖匹配完成(為點獨立集的補集)
+	邊獨立集(edge independent set)
+		就是匹配(兩兩不相鄰的邊)
+		最大邊獨立集(maximum edge independent set):最大匹配
+		一般圖:不存在近似比好於1.3606的多項是時間算法(除非P=NP)
+		二分圖:參見二分圖匹配
+	邊覆蓋集(edge cover)
+		L是G的邊覆蓋集:∀u∈G.V,∃v∈G.V,(u,v)∈L
+		最小邊覆蓋集(minimum edge cover):邊數最少
+		定理:最小邊覆蓋集=圖中點的個數-最大匹配數。
+		最大邊獨立集、最小邊覆蓋，兩者幾乎相等，差異是未匹配點所連接的邊。
+	總結
+		最小邊覆蓋數=最大獨立集數=G.V-最大匹配數
+		最大團=最大獨立集的補圖
+		最小點覆蓋=最大匹配數
+		最小點覆蓋+最大獨立數=G.V
+		最小割=最小點權覆蓋集=點權和-最大點權獨立集
