@@ -1,0 +1,263 @@
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{caption}
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{titlesec}
+
+% My addon
+\renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
+\usepackage{fontspec}   %加這個就可以設定字體
+\usepackage{xeCJK}       %讓中英文字體分開設置
+\usepackage{ulem}
+\setmainfont{Arial}
+\setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
+\XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
+
+% \def\footnotesize{\fontsize{16}{24}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
+\def\large{\fontsize{16}{24}\selectfont}
+\def\Large{\fontsize{20}{30}\selectfont}
+\def\LARGE{\fontsize{24}{36}\selectfont}
+\def\huge{\fontsize{32}{48}\selectfont}
+\def\Huge{\fontsize{36}{54}\selectfont}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+% \chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\hmwkClass} % Top right header
+% \lfoot{\lastxmark} % Bottom left footer
+\cfoot{\thepage} % Bottom center footer
+% \rfoot{Page\ \ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+% \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%   CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\newcounter{nalg} % defines algorithm counter for chapter-level
+\DeclareCaptionLabelFormat{algocaption}{\normalsize\bf Algorithm \thenalg} % defines a new caption label as Algorithm x.y
+
+\lstnewenvironment{algorithm}[1][] %defines the algorithm listing environment
+{   
+    \refstepcounter{nalg} %increments algorithm number
+    \captionsetup{labelformat=algocaption,labelsep=colon} %defines the caption setup for: it ises label format as the declared caption label above and makes label and caption text to be separated by a ':'
+    \lstset{ %this is the stype
+        frame=tB,
+        numbers=left, 
+        numberstyle=\normalsize,
+        basicstyle=\normalsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end,} %add the keywords you want, or load a language as Rubens explains in his comment above.
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
+    }
+}
+{}
+
+
+%----------------------------------------------------------------------------------------
+%       NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+% 這裡記得改
+\newcommand{\hmwkTitle}{培訓-8} % Assignment title
+\newcommand{\hmwkDueDate}{2015年11月13日（金曜日）} % Due date
+\newcommand{\hmwkClass}{字串處理と資料結構II} % Course/class
+\newcommand{\hmwkAuthorName}{joe59491、samsam2310} % Your name
+
+% 不需要修改
+\newcommand{\hmwkClassTime}{不需要修改} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{不需要修改} % Teacher/lecturer
+
+%----------------------------------------------------------------------------------------
+%       TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\hmwkClass}
+\author{\hmwkAuthorName}
+\date{\hmwkDueDate}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\LARGE~\\[4ex]
+\centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
+\normalsize
+
+
+%----------------------------------------------------------------------------------------
+% 從這裡開始寫
+% 標題那些的
+\section{字串}
+字串是指一堆字元串成一串的東東，在資訊領域可說是非常實用、非常重要的一個部份。\\
+其中常見的問題就是字串匹配，假設有兩字串A、B，無論是要確定A是否等於B，
+或是A包含B，或是A裡面出現幾次B等等，
+不管是搜尋、分析、還是和諧掉某些不該出現的\sout{天安門事件}和擋掉不該出現的網站等等，
+字串演算法和這些事情的效率密切相關，所以可以從DP中獨立出來講。\\
+字串的題目都很活，善用各個演算法的性質，才能夠找出答案。
+
+\subsection{天真匹配}
+觀察一個字串A裡面是否有字串B，我們第一個想到的是O(|A|*|B|)的天真做法，
+也就是用兩層For迴圈去檢查字串是否有匹配到，但這顯然不是個好作法。
+
+\subsection{Knuth-Morris-Pratt Algorithm | KMP}
+概念其實就是，做天真法的時候，匹配失敗時，就可以切掉了，不用跑完第二層迴圈。\\
+同時，我們把B往前挪動繼續匹配時，也不一定只能移動一格，而是根據已匹配的部分(那部分AB相同)做判斷，一次移動多一點。\\
+不難觀察出，這個優化跟B的結構有關，當B的某個後綴同時是B的前綴時，我們就可以直接挪動B到這個位置。\\
+我們先定義一個東西「相同前綴後綴」，如果S是B的相同前綴後綴，代表這個字串S是B的前綴，同時也是B的後綴。
+而最長相同前綴後綴就是自己，最短的是空字串。\\
+我們可以用DP快速求出B每個前綴的相同前綴後綴長度，當我們要移動B時，我們就可以透過這個值快速移動B。
+
+\subsection{Z算法}
+透過DP的方式處理。首先定義一個Z(x)函數，代表S[0]到S[N]和S[x]到S[N]這兩段字串可以匹配多長，
+也就是某個後綴和S的前綴的最長匹配是多長。\\
+這個函數的算法可以用DP求出，詳細可以查演算法筆記 String Matching Z算法，或是專心看白板。\\
+至於怎麼用它來匹配字串呢？
+我們可以把A和B接起來，中間用一個不在A也不在B裡出先的字元隔開，然後做一次Z函數，
+我們發現，對於所有的Z(x)，每出現一個Z(x)等於A的長度，A就在B裡出現了一次。
+
+\subsection{Hash}
+Hash對字串匹配來說，真是個輕巧又方便的做法。
+在字串中Hash的應用是個重要的概念。
+許多問題雖然可以用正規的方法解決，但是用Hash方式可能更直覺，而且只要問題不要太過於精巧，Hash硬座的複雜度也不輸給正常的方法。\\
+至於如何Hash，有個簡單的方法，就是把一個包含26種不同字母的字串
+(如果有大小寫就是52，不過因為字串長度不一樣，要補空字元，所以會多一種字元)
+當成一個27進位數，對於一個字串，我們可以將他轉成一個十進位數字儲存。
+P進位數的話，第一位乘以$P^0$，第二位乘以$P^1$，第三位乘以$P^2$...依此類推，然後加起來。
+但是這樣很顯然一下就超過long long範圍了，所以我們可以MOD一個大質數，這樣就是一種Hash了。
+這樣匹配兩個字串是否相同，只要看Hash值是否相同，複雜度就從O(N)變成O(1)了，原本不可行的方式，都可行了！\\
+話說有時候剛好會碰撞導致兩個不同的字串被當作一樣，遇到這種狀況時，
+可以用兩個或多個大質數同時做Hash，會大大降低誤判的機率。
+
+\subsection{Suffix Array}
+後綴數組，我們可以把字串拆成一堆後綴字串，然後排序，
+這樣就可以對他們做一些像是二分搜這樣的\sout{骯髒的}手段。\\
+但是真的拆成一堆後綴空間會變成$|S|^2$，所以我們可以直接紀錄他在字串S中開始的位置就好。
+至於排序就利用像是Counting Sort之類的方法就行了。\\
+當然不只這樣，在排序的同時，我們可以利用類似倍增的算法來優化我們的排序步驟。
+
+\subsection{H 數組}
+在做Suffix Array時，我們可以順便紀錄一個H函數。\\
+H函數代表相鄰的兩個後綴S[x-1]和S[x]，他們的前綴有多長是一樣的。
+通常H(0)是0，H(1)才開始有意義。\\
+這個東西就可以用來做些奇怪的事。
+
+\subsection{AC 自動機}
+所謂的自動機，就是你有很多狀態，然後你可以依照條件在狀態裡移動，最後停的位置就是結果。\\
+基本上AC自動機是KMP的強化版，讓你可以在一個長字串中一次找出很多短字串，有點像是一次搜尋很多筆。\\
+其中，KMP匹配失敗時，我們會知道要從那裡繼續，而AC自動機就是告訴你你接下來要去那些節點，
+進而一次搜尋完所有短字串。
+
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<字串匹配>\\
+給你字串A、B，問A是不是B的子字串。
+\item[ 2.]<不同子字串數>\\
+給你字串A，問你A總共有多少種不同的子字串。
+\item[ 3.]<近似匹配>\\
+給你字串A、B，問你B在A中的所有近似匹配的位置，近似匹配就是不一樣的地方不超過K個。
+\item[ 4.]<TIOJ 1735 K-口吃子字串>\\
+一個K口吃字串就是長度為K的字串重複兩次。給你字串S和K，問你總共有多少子字串A滿足A是K口吃字串。
+\item[ 5.]<最長回文子字串>
+給你字串S，要你求出最長回文子字串。
+\end{description}
+
+
+\section{進階資料結構}
+在解題目時，常常需要一些複雜的資料結構來解決問題。
+以下稍微介紹幾種資料結構。
+由於篇幅的關係，就不附上程式碼，大家可以參考網路資源或是參加相關營隊，會對這些進階資料結構更了解。\\
+或者可以到「日月掛長的模板庫」看看各種資料結構的模板。
+
+\subsection{Trie}
+Trie，字典樹，也就是樹的每個節點代表一個字元或是狀態，然後底下有其他的字元可以繼續往下走。
+有點像字典一樣，所以叫做字典樹。
+字典樹可以用來解決字串匹配等問題，像是AC自動機等等，又或者是可以壓縮成字串的奇怪資料結構題。\\
+這東西吃非常多記憶體QAQ。
+
+\subsection{樹套樹}
+當一個樹的節點，不是一個值而是一顆樹時，就是樹套樹。\\
+通常在處理二維問題時，會需要對某個子矩形做查詢，就可以裡用二維的樹套樹來解決。
+
+\subsection{Binary Search Tree}
+二元搜尋樹是一個很經典的資料結構，他保證一個性質，
+對於每個節點，他的左小孩的值一定小於自己，右小孩的值一定大於等於自己。
+有了這個性質，我們可以在O(lgN)的時間尋找一個值，並且可以O(lgN)插入，O(lgN)刪除一個值。\\
+但是事情沒有著麼美好，假設我們按照順序插入數字，那二元搜尋樹將會退化成一條練，操作的複雜度都會變成O(N)。
+為了防止這件事，很多人發明了各種二元搜尋樹，利用個種旋轉、分割等等方法，避免樹退化。
+
+
+\subsection{Treap}
+樹堆，一個可以用來解決RMQ問題的樹狀結構。
+樹是指樹性質，左小孩小於自己、右小孩大於等於自己，
+堆是指推性質，最大值在上面，每個小孩都比自己小。\\
+我們給每個節點兩個值，並分別讓這兩個值符合樹性質和堆性質，就稱為一顆Treap。
+目前Treap常常當成二元搜尋樹使用，只是我們在插入值時，隨機給一個優先值，
+並想辦法讓這個優先值符合堆性質，這樣的話，我們可以保證在運氣不會太差的情況下，
+Treap可以有良好的效率。\\
+Treap有多種實作方法，目前常見的是分割法，也就是將樹切開，處理完在合併。
+
+\subsection{左偏樹}
+把Treap的code稍微改一改，就可以得到左偏樹。\\
+左偏樹就是盡量讓樹退化成一條線，然後快速取得最大值的一種資料結構。
+實作時，如果右邊子節點數比左邊多，就交換兩個節點，維持左邊節點比較多的狀態，然後處理都往右邊丟，
+這樣複雜度就可以保證小於O(lgN)，同時他和Binary Heap的不同是，他可以快速合併，在某些狀況下很方便。
+
+\subsection{持久化資料結構}
+持久化資料結構，原始的意義是指，我們常常對一些資料結構，比如線段樹、Treap做了一些修改操作，
+如插入、刪除等等，但是我們卻有時候又想要回復或是查看某個歷史版本的狀態，比如打字打一打想要復原等。\\
+這種時候持久化資料結構就派上用場了。
+我們可以每次更新就複製一份新的資料結構出來，這樣一來就可以保存所有歷史版本。
+但是這樣記憶體顯然會爆炸，所以我們利用Copy on Write的技巧，也就是當你有修改時，就複製一份出來。\\
+比如說有一顆線段樹，當你修改了一個點，你就複製一個新的點，然後讓他只向原本的小孩，
+這樣其他人指到的是舊版本，而底下不變的地方就不用複製了！\\
+
+後來持久化線段樹也可以用來解決相似的資料結構大量重複出現的問題，
+比如你想要開很多顆線段樹在紀錄一個序列每個前綴的某個東西，那你可以不用開N顆線段樹，
+而是開一顆持久化線段樹然後不停地修改。\\
+
+話說，持久化線段樹在大陸又稱為主席樹。
+
+
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<TIOJ 1843 傳說中的編譯器，上集。>\\
+給你一張無向圖，三種操作，分別是修改某個點的權重、刪除某條邊、紀錄和某個點相鄰的每個點中第K大的點，
+題目問你所有被記錄的點權平均。
+\item[ 2.]<TIOJ 1840 Coding Days コーディングデイス>\\
+給你一個序列，你有兩種操作，修改一個點的值，和查詢一個區間第K大的數字。
+\item[ 3.]<TIOJ 1842 遊戲 Game| IOI 2013>\\
+給你一個平面，你有兩種操作，分別是修改一個點，和查詢一個矩形區域內的植的GCD。
+\item[ 4.]<TIOJ 1866 小向的魔動力捷運系統>\\
+給你一棵有根樹，每個點都有權重，問你每個節點到根的路徑上，總XOR值最大的子路徑，總XOR值是多少。
+\end{description}
+
+\end{document}
