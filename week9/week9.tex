@@ -88,8 +88,8 @@
 
 % 這裡記得改
 \newcommand{\hmwkTitle}{培訓-1} % Assignment title
-\newcommand{\hmwkDueDate}{2015年9月18日（金曜日）} % Due date
-\newcommand{\hmwkClass}{演算法概論、排序、資料結構、雜湊} % Course/class
+\newcommand{\hmwkDueDate}{2015年11月18日（水曜日）} % Due date
+\newcommand{\hmwkClass}{DP2と特殊解題技巧} % Course/class
 \newcommand{\hmwkAuthorName}{samsam2310} % Your name
 
 % 不需要修改
@@ -115,15 +115,36 @@
 %----------------------------------------------------------------------------------------
 % 從這裡開始寫
 % 標題那些的
-\section{Title}
-test。
-\subsection{subtitle}
-1234\\
-中文測試。
-\section*{SSSSSSSS2}
-1234
-\section{SSSSSSSS3}
-1234
+\section{DP優化}
+
+\subsection{}
+
+
+\section{解題技巧}
+
+\subsection{Meet in the middle}
+HOJ 132 給你最多 30 個物品，每個物品有價值 c($−10^9$ ≤ c ≤ $10^9$)，問是否存在一個集合 S 滿足 $\sum_{i S}c_i = 0$。
+% 很簡單的想法是 O(2n
+% ) 爆搜，然後亂剪枝。但這實在不是很營養的辦法，那所以
+% 有沒有複雜度合理一點的算法呢?
+% 不難發現任何一個集合都是從前 15 個物品中找一些、後 15 個找一些，然後合
+% 併出來。所以我們可以把前 15 個跟後 15 個的所有子集合 (2
+% 15 + 215) 算出來，然
+% 後對於前半的每種子集合，搜尋看說後半的每種子集合中是否有集合跟他加起來是
+% 0 的，這明顯把後半每個子集合的權重都丟到平衡樹裡，就可以 O(lgn) 的時間完成
+% 搜尋。
+% 這樣子的時間複雜度是 O(2 n
+% 2 × 2 + 2 n
+% 2 × lg2
+% n
+% 2 )，這最大也就 500000 左右而已，相
+% 當理性的計算量。
+% Exercises!!
+% 1. Balanced Cow Subset (USACO open 2012 gold)
+% 給你 n(≤ 20) 隻乳牛，每隻乳牛有他的產乳量 mi，你現在要把這些乳牛分成
+% 黑牛、棕牛和白牛，滿足黑牛的總產乳量 = 棕牛的產乳量，問有幾種" 把牛分
+% 到白牛的方法"。
+
 
 
 % 範例題目的格式
