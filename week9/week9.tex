@@ -1,0 +1,161 @@
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{caption}
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{titlesec}
+
+% My addon
+\renewcommand{\thepage}{\Roman{page}}% Roman numerals for page counter
+\usepackage{fontspec}   %加這個就可以設定字體
+\usepackage{xeCJK}       %讓中英文字體分開設置
+\setmainfont{Arial}
+\setCJKmainfont{思源黑體} %設定中文為系統上的字型，而英文不去更動，使用原TeX字型
+\XeTeXlinebreaklocale "zh"             %這兩行一定要加，中文才能自動換行
+\XeTeXlinebreakskip = 0pt plus 1pt     %這兩行一定要加，中文才能自動換行
+
+% \def\footnotesize{\fontsize{16}{24}\selectfont}
+\def\small{\fontsize{10}{15}\selectfont}
+\def\normalsize{\fontsize{12}{16}\selectfont}
+\def\large{\fontsize{16}{24}\selectfont}
+\def\Large{\fontsize{20}{30}\selectfont}
+\def\LARGE{\fontsize{24}{36}\selectfont}
+\def\huge{\fontsize{32}{48}\selectfont}
+\def\Huge{\fontsize{36}{54}\selectfont}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkTitle} % Top left header
+% \chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\hmwkClass} % Top right header
+% \lfoot{\lastxmark} % Bottom left footer
+\cfoot{\thepage} % Bottom center footer
+% \rfoot{Page\ \ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+% \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%   CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\newcounter{nalg} % defines algorithm counter for chapter-level
+\DeclareCaptionLabelFormat{algocaption}{\normalsize\bf Algorithm \thenalg} % defines a new caption label as Algorithm x.y
+
+\lstnewenvironment{algorithm}[1][] %defines the algorithm listing environment
+{   
+    \refstepcounter{nalg} %increments algorithm number
+    \captionsetup{labelformat=algocaption,labelsep=colon} %defines the caption setup for: it ises label format as the declared caption label above and makes label and caption text to be separated by a ':'
+    \lstset{ %this is the stype
+        frame=tB,
+        numbers=left, 
+        numberstyle=\normalsize,
+        basicstyle=\normalsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, in, if, else, foreach, while, begin, end,} %add the keywords you want, or load a language as Rubens explains in his comment above.
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
+    }
+}
+{}
+
+
+%----------------------------------------------------------------------------------------
+%       NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+% 這裡記得改
+\newcommand{\hmwkTitle}{培訓-1} % Assignment title
+\newcommand{\hmwkDueDate}{2015年9月18日（金曜日）} % Due date
+\newcommand{\hmwkClass}{演算法概論、排序、資料結構、雜湊} % Course/class
+\newcommand{\hmwkAuthorName}{samsam2310} % Your name
+
+% 不需要修改
+\newcommand{\hmwkClassTime}{不需要修改} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{不需要修改} % Teacher/lecturer
+
+%----------------------------------------------------------------------------------------
+%       TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\hmwkClass}
+\author{\hmwkAuthorName}
+\date{\hmwkDueDate}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\LARGE~\\[4ex]
+\centerline{\bf\hmwkClass}\large\\[2ex]\centerline{\hmwkAuthorName}\\[2ex]\centerline{\hmwkDueDate}\\
+\normalsize
+
+
+%----------------------------------------------------------------------------------------
+% 從這裡開始寫
+% 標題那些的
+\section{Title}
+test。
+\subsection{subtitle}
+1234\\
+中文測試。
+\section*{SSSSSSSS2}
+1234
+\section{SSSSSSSS3}
+1234
+
+
+% 範例題目的格式
+\subsection{Exercises!!}
+\begin{description}
+\item[ 1.]<TIOJ 1080 逆序數對>\\
+輸入一個數列，輸出數列中有多少數對是逆序的。
+\item[ 2.]<TIOJ 1355 河內之塔-蘿莉塔>\\
+有三根柱子，第一根上有圈圈，每個大小都不一樣，且大的在下面，然後請輸出如何把所有的圈圈移到第三根柱子上，過程中不能讓小的圈圈在大的圈圈下面。
+\item[ 3.]<TIOJ 1500 平面最近點對>\\
+給你平面上N個點，問最近的兩個點有多近。
+\item[ 4.]<POJ 1741 樹分治>\\
+給你一棵樹，問樹上距離小於等於K的點對數量。
+\item[ 5.]<TIOJ 1631 點連接遊戲>\\
+在正方形xy平面上給你N個紅點跟綠點(左上右上紅點，左下右下綠點)，保證三點不共線，請用不交叉的數個線段分別把紅點跟綠點連起來。
+\end{description}
+
+
+% caption 是標題，裡面是虛擬碼。
+\begin{algorithm}[caption={Binary Search}, label={alg1}]
+function Binary_Search(x, array[])
+    l = 0
+    r = n - 1 (n是array的大小)
+    while l < r
+        mid = (l + r) / 2
+        if x > array[mid]
+            l = mid + 1
+        else
+            r = mid
+    return l
+end function
+\end{algorithm}
+
+
+\end{document}
